@@ -1,0 +1,20 @@
+{
+    "manifest_version": 2,
+    "name": "untitled",
+    "short_name": "untitled",
+    "version": "1.0",
+  
+    "description": "a new tab page created by me",
+  
+    "icons": {
+      "48": "icons/border-48.png"
+    },
+
+    "chrome_url_overrides" : {
+        "newtab": "index.html"
+    },
+  
+    "permissions": ["storage"]
+
+}
+  
