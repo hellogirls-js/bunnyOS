@@ -1,4 +1,6 @@
-import $ from "jquery";
+import dayjs from "dayjs";
 import "./styles/style.scss";
 
-$(".terminal-window").draggable();
+setInterval(() => {
+    document.getElementById("date-button").innerHTML = dayjs().format("h:mmA");
+}, 1000);

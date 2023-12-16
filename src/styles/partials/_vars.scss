@@ -1,0 +1,11 @@
+@use "frappe";
+@use "sass:color";
+
+// border radius
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 12px;
+
+// box shadows
+$shadow-sm: 0px 4px 6px color.change(frappe.$crust, $lightness: 3%, $alpha: 0.6), 0px 2px 4px color.change(frappe.$crust, $lightness: 3%, $alpha: 0.6);
+$shadow-md: 0px 8px 10px color.change(frappe.$crust, $alpha: 0.3), 0px 4px 6px color.change(frappe.$crust, $alpha: 0.3);

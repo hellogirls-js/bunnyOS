@@ -6,7 +6,6 @@
     "build": "webpack"
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.29",
     "css-loader": "^6.8.1",
     "eslint": "^8.55.0",
     "eslint-plugin-prettier": "^5.0.1",
@@ -24,9 +23,7 @@
     "webpack-dev-server": "^4.15.1"
   },
   "dependencies": {
-    "@types/jquery-ui": "npm:@types/jqueryui",
-    "jquery": "^3.7.1",
-    "jquery-ui": "^1.13.2",
+    "dayjs": "^1.11.10",
     "node-sass": "^9.0.0",
     "path": "^0.12.7"
   }

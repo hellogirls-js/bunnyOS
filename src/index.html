@@ -4,18 +4,36 @@
         <title>new tab</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <script src="/index.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     </head>
     <body>
-        <main id="desktop-bg">
+        <main id="desktop-container">
+            <nav>
+                <div class="nav-group">
+                    <button id="date-button">
+
+                    </button>
+                </div>
+                <div class="nav-group">
+                    <button id="settings-button">
+                        <i class="ti ti-settings"></i>
+                    </button>
+                </div>
+            </nav>
             <div class="terminal-window">
                 <div class="terminal-header">
-                    
+                    <div class="terminal-header-button yellow"></div>
+                    <div class="terminal-header-button green"></div>
+                    <div class="terminal-header-button red"></div>
                 </div>
                 <div class="terminal-body">
-                    
+                    <div class="terminal-command-body">
+                        <div class="terminal"></div>
+                    </div>
                 </div>
             </div>
+            <div id="desktop-bg"></div>
         </main>
+        <script src="/index.js"></script>
     </body>
 </html>

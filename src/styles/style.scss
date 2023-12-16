@@ -1,5 +1,134 @@
-.terminal-window {
-    border: 1px solid #000;
-    width: 500px;
-    height: 300px;
+@use "partials/frappe";
+@use "partials/normalize";
+@use "partials/vars";
+@use "sass:color";
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Ubuntu+Mono:wght@400;700&display=swap');
+
+$nav-height: 3vh;
+$nav-margin: 2px;
+
+* {
+    box-sizing: border-box;
 }
+
+body {
+    width: 100vw;
+    height: 100vh;
+
+    #desktop-container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        
+        #desktop-bg {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            z-index: 0;
+            background-image: url("../assets/card_still_full1_2660_normal.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            opacity: 0.8;
+        }
+
+        nav {
+            display: flex;
+            position: relative;
+            padding: 5px;
+            align-items: center;
+            justify-content: space-around;
+            margin: auto;
+            z-index: 10;
+            background-image: linear-gradient(color.change(frappe.$base, $alpha: 0.9), color.change(frappe.$mantle, $alpha: 0.9));
+            backdrop-filter: blur(10px);
+            width: 80%;
+            height: $nav-height;
+            border-radius: vars.$radius-lg;
+            box-shadow: vars.$shadow-md;
+            font-family: "Ubuntu Mono", monospace;
+
+            .nav-group {
+                display: flex;
+                justify-content: flex-end;
+
+                button {
+                    background: transparent;
+                    padding: 0;
+                    border: none;
+                    outline: none;
+                    color: frappe.$text;
+
+                    &#settings-button {
+                        width: 21px;
+                        height: 21px;
+                    }
+
+                    i {
+                        font-size: 1.3rem;
+                    }
+                }
+            }
+
+            
+        }
+
+        .terminal-window {
+            position: absolute;
+            width: 35%;
+            height: 40%;
+            top: 4vh;
+            z-index: 5;
+            font-family: "Space Mono", monospace;
+            background-image: linear-gradient(color.change(frappe.$base, $alpha: 0.95), color.change(frappe.$mantle, $alpha: 0.95));
+            border-radius: vars.$radius-lg;
+            backdrop-filter: blur(10px);
+            box-shadow: vars.$shadow-sm;
+            padding: 2px;
+            overflow-y: scroll;
+            scrollbar-width: none;
+            color: frappe.$text;
+
+            .terminal-header {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 5px;
+                padding: 5px;
+
+                .terminal-header-button {
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 50%;
+                    
+                    &.green {
+                        background-color: frappe.$green;
+                    }
+
+                    &.yellow {
+                        background-color: frappe.$yellow;
+                    }
+
+                    &.red {
+                        background-color: frappe.$red;
+                    }
+                }
+            }
+
+            &::selection {
+                background-color: color.change(frappe.$crust, $alpha: 0.4);
+                color: inherit;
+            }
+
+            .terminal-name {
+                color: frappe.$green;
+            }
+            
+            .terminal-directory {
+                color: frappe.$blue;
+            }
+        }  
+    } 
+}
+

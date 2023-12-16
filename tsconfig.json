@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+      "baseUrl": "./",
       "outDir": "./dist/",
       "noImplicitAny": true,
       "module": "es6",
@@ -7,6 +8,6 @@
       "jsx": "react",
       "allowJs": true,
       "moduleResolution": "node",
-      "allowSyntheticDefaultImports": true
+      "allowSyntheticDefaultImports": true,
     }
   }
