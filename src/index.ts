@@ -34,13 +34,20 @@ if (bookmarks === null || bookmarks.length === 0) {
     `;
 } else {
     const bookmarksArray: Bookmark[] = JSON.parse(bookmarks);
-    bookmarksArray.forEach((bookmark: Bookmark) => {
+    if (bookmarksArray === null) {
+        // do nothing
         id("bookmarks-list").innerHTML += `
-            <div class="bookmark-link">
-                <a href="${bookmark.url}">${bookmark.name}</a>
-            </div>
-        `;
-    });
+        <div class="no-bookmarks">no bookmarks added yet</div>
+    `;
+    } else {
+        bookmarksArray.forEach((bookmark: Bookmark) => {
+            id("bookmarks-list").innerHTML += `
+                <div class="bookmark-link">
+                    <a href="${bookmark.url}">${bookmark.name}</a>
+                </div>
+            `;
+        });
+    }
 }
 
 function createBookmark(name: string, url: string) {
@@ -70,13 +77,16 @@ function listBookmarks() {
     const bookmarks: Bookmark[] = JSON.parse(localStorage.getItem("bookmarks"));
     const outputNode = document.createElement("div");
     outputNode.className = "terminal-output";
-    bookmarks.forEach(bookmark => {
-        outputNode.innerHTML += `<div class="bookmark-link">
-            <a href="${bookmark.url}">${bookmark.name}</a>
-        </div>`;
-    });
-
-
+    if (bookmarks === null) {
+        outputNode.innerHTML += `<div class="no-bookmarks">no bookmarks added yet</div>`;
+    } else {
+        bookmarks.forEach(bookmark => {
+            outputNode.innerHTML += `<div class="bookmark-link">
+                <a href="${bookmark.url}">${bookmark.name}</a>
+            </div>`;
+        });
+    }
+    
     id("bookmarks-terminal-body").appendChild(outputNode);
 }
 
@@ -145,6 +155,7 @@ function bookmarkCommand(event: SubmitEvent) {
         const templateContent = (id("add-bookmark-template") as HTMLTemplateElement).content.cloneNode(true);
         id("bookmarks-terminal-body").appendChild(templateContent);
         id("bookmarks-terminal-body").getElementsByTagName("form")[0].onsubmit = bookmarkCommand;
+        (classes("bookmarks-textbox")[0] as HTMLInputElement).focus();
     }
 }
 
