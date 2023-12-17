@@ -10,11 +10,94 @@ $nav-margin: 2px;
 
 * {
     box-sizing: border-box;
+    font-family: "Ubuntu Mono", monospace;
+    color: frappe.$text;
+    &::selection {
+        background-color: color.change(frappe.$crust, $alpha: 0.6);
+        color: inherit;
+    }
 }
 
 body {
     width: 100vw;
     height: 100vh;
+
+    input[type=text] {
+        background: transparent;
+        border: 1px solid frappe.$text;
+        border-radius: vars.$radius-sm;
+        padding: 4px 10px;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    #modal-container {
+        position: absolute;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        width: 100vw;
+        height: 100vh;
+        background-color: color.change(frappe.$crust, $alpha: 0.8);
+        backdrop-filter: blur(5px);
+
+        #modal {
+            width: 75vw;
+            height: 75vh;
+            z-index: 1000;
+            background-image: linear-gradient(frappe.$base, frappe.$mantle);
+            border-radius: vars.$radius-lg;
+            box-shadow: vars.$shadow-md;
+            padding: 10px;
+            font-size: 1.3rem;
+
+            h1 {
+                text-align: center;
+                font-size: 2.5rem;
+            }
+
+            #reset-settings {
+                margin: auto;
+            }
+
+            #modal-body {
+                display: flex;
+                gap: 3vw;
+
+                fieldset {
+                    flex-grow: 1;
+                    border-radius: vars.$radius-sm;
+                    padding: 20px;
+                    border: 1px solid frappe.$surface1;
+
+                    legend {
+                        font-size: 1.5rem;
+                        padding: 0px 5px;
+                    }
+
+                    .textfield {
+                        display: flex;
+                        align-items: baseline;
+                        margin-bottom: 5%;
+
+                        label {
+                            flex-grow: 1;
+                        }
+
+                        input[type=text] {
+                            flex-basis: 80%;
+                            caret-color: frappe.$rosewater;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     #desktop-container {
         position: relative;
@@ -41,7 +124,7 @@ body {
             justify-content: space-around;
             margin: auto;
             z-index: 10;
-            background-image: linear-gradient(color.change(frappe.$base, $alpha: 0.9), color.change(frappe.$mantle, $alpha: 0.9));
+            background-image: linear-gradient(color.change(frappe.$base, $alpha: 0.95), color.change(frappe.$mantle, $alpha: 0.95));
             backdrop-filter: blur(10px);
             width: 80%;
             height: $nav-height;
@@ -49,84 +132,159 @@ body {
             box-shadow: vars.$shadow-md;
             font-family: "Ubuntu Mono", monospace;
 
-            .nav-group {
-                display: flex;
-                justify-content: flex-end;
+            button {
+                background: transparent;
+                padding: 0;
+                border: none;
+                outline: none;
+                color: frappe.$text;
 
-                button {
-                    background: transparent;
-                    padding: 0;
-                    border: none;
-                    outline: none;
-                    color: frappe.$text;
+                &#date-button {
+                    margin: auto;
+                }
 
-                    &#settings-button {
-                        width: 21px;
-                        height: 21px;
-                    }
+                &#settings-button {
+                    position: absolute;
+                    right: 5px;
+                    width: 21px;
+                    height: 21px;
+                }
 
-                    i {
-                        font-size: 1.3rem;
-                    }
+                i {
+                    font-size: 1.3rem;
                 }
             }
-
-            
         }
 
         .terminal-window {
             position: absolute;
-            width: 35%;
-            height: 40%;
-            top: 4vh;
             z-index: 5;
             font-family: "Space Mono", monospace;
-            background-image: linear-gradient(color.change(frappe.$base, $alpha: 0.95), color.change(frappe.$mantle, $alpha: 0.95));
+            background-image: linear-gradient(color.change(frappe.$base, $alpha: 0.9), color.change(frappe.$mantle, $alpha: 0.9));
             border-radius: vars.$radius-lg;
             backdrop-filter: blur(10px);
             box-shadow: vars.$shadow-sm;
-            padding: 2px;
+            padding: 4px;
             overflow-y: scroll;
             scrollbar-width: none;
             color: frappe.$text;
 
-            .terminal-header {
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-                gap: 5px;
-                padding: 5px;
+            &#bookmarks-window {
+                width: 35%;
+                height: 40%;
+                top: 4vh;
+                left: 2vw;
 
-                .terminal-header-button {
-                    width: 14px;
-                    height: 14px;
-                    border-radius: 50%;
-                    
-                    &.green {
-                        background-color: frappe.$green;
-                    }
-
-                    &.yellow {
-                        background-color: frappe.$yellow;
-                    }
-
-                    &.red {
-                        background-color: frappe.$red;
-                    }
+                .no-bookmarks {
+                    color: frappe.$subtext0;
                 }
             }
 
-            &::selection {
-                background-color: color.change(frappe.$crust, $alpha: 0.4);
-                color: inherit;
+            .terminal-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 5px;
+                padding: 4px 4px 8px 4px;
+
+                .terminal-header-title {
+                    color: frappe.$overlay1;
+                }
+                
+                .terminal-header-buttons {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    .terminal-header-button {
+                        width: 14px;
+                        height: 14px;
+                        border-radius: 50%;
+                        
+                        &.green {
+                            background-color: frappe.$green;
+                        }
+
+                        &.yellow {
+                            background-color: frappe.$yellow;
+                        }
+
+                        &.red {
+                            background-color: frappe.$red;
+                        }
+                    }
+                }
+
+                
             }
 
-            .terminal-name {
-                color: frappe.$green;
-            }
-            
-            .terminal-directory {
-                color: frappe.$blue;
+            .terminal-body {
+                overflow-y: auto;
+
+                q {
+                    color: frappe.$sapphire;
+                }
+
+                .terminal-note {
+                    color: frappe.$yellow;
+                }
+
+                .terminal-output {
+
+                    margin-bottom: 8px;
+
+                    &.error {
+                        color: frappe.$red;
+
+                        strong {
+                            color: frappe.$red;
+                        }
+                    }
+
+                    &.success {
+                        color: frappe.$green;
+                        
+                        strong {
+                            color: frappe.$green;
+                        }
+                    }
+                }
+
+                .terminal-command-body {
+                    display: flex;
+                    flex-flow: row wrap;
+                    align-items: baseline;
+                    gap: 10px;
+
+                    .terminal-command-info {
+                        display: flex;
+                        align-items: baseline;
+
+                    .terminal-name {
+                            color: frappe.$green;
+                            font-weight: 700;
+                        }
+                        
+                        .terminal-directory {
+                            color: frappe.$blue;
+                            font-weight: 700;
+                        } 
+                    }
+
+                    .terminal-command-text {
+                        flex-grow: 1;
+                    
+                        input[type=text] {
+                            width: 100%;
+                            background-color: transparent;
+                            border: none;
+                            outline: none;
+                            color: frappe.$text;
+                            caret-color: frappe.$rosewater;
+                            caret-shape: bar;
+                            padding: 0;
+                        }
+                    }
+                }
             }
         }  
     } 

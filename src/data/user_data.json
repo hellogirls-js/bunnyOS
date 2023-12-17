@@ -2,6 +2,19 @@
     "user": {
         "name": "",
         "device": "",
-        "location": ""
+        "location": "",
+        "time_format": "0-12",
+        "bookmarks": []
+    },
+    "app": {
+        "background": {
+            "type": "",
+            "value": ""
+        }
+    },
+    "showWindow": {
+        "bookmarks": true,
+        "clock": true,
+        "weather": true
     }
 }

@@ -7,29 +7,97 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     </head>
     <body>
+        <div id="modal-container">
+            <div id="modal">
+                <h1>settings</h1>
+                <div id="modal-body">
+                    <fieldset>
+                        <legend>user settings</legend>
+                        <form id="user-settings">
+                            <div class="textfield">
+                                <label for="modal-user-name">name</label>
+                                <input type="text" placeholder="name" id="modal-user-name" name="modal-user-name" />
+                            </div>
+                            <div class="textfield">
+                                <label for="modal-device-name">device name</label>
+                                <input type="text" placeholder="device name" id="modal-device-name" name="modal-device-name" />
+                            </div>
+                            <div class="textfield">
+                                <label for="modal-user-location">location</label>
+                                <input type="text" placeholder="location" id="modal-user-location" name="modal-user-location" />
+                            </div>
+                            <input type="submit" value="save user settings" />
+                        </form>
+                    </fieldset>
+                    <fieldset>
+                        <legend>window settings</legend>
+                        <div>background</div>
+                        <input type="radio" name="modal-background-type" id="solid-color-bg" />
+                        <label for="solid-color-bg">solid color</label> <br />
+                        <input type="radio" name="modal-background-type" id="gradient-bg" />
+                        <label for="gradient-bg">gradient</label> <br />
+                        <input type="radio" name="modal-background-type" id="image-bg" />
+                        <label for="image-bg">image</label>
+                    </fieldset>
+                </div>
+                <input type="button" value="reset user settings" />
+            </div>
+        </div>
         <main id="desktop-container">
             <nav>
-                <div class="nav-group">
-                    <button id="date-button">
+                <button id="date-button">
 
-                    </button>
-                </div>
-                <div class="nav-group">
-                    <button id="settings-button">
-                        <i class="ti ti-settings"></i>
-                    </button>
-                </div>
+                </button>
+                <button id="settings-button">
+                    <i class="ti ti-settings"></i>
+                </button>
             </nav>
-            <div class="terminal-window">
-                <div class="terminal-header">
-                    <div class="terminal-header-button yellow"></div>
-                    <div class="terminal-header-button green"></div>
-                    <div class="terminal-header-button red"></div>
-                </div>
-                <div class="terminal-body">
-                    <div class="terminal-command-body">
-                        <div class="terminal"></div>
+            <div class="terminal-window" id="bookmarks-window">
+                <div class="terminal-header" id="bookmarks-window-header">
+                    <div class="terminal-header-title">terminal: ~/bookmarks</div>
+                    <div class="terminal-header-buttons">
+                        <div class="terminal-header-button yellow"></div>
+                        <div class="terminal-header-button green"></div>
+                        <div class="terminal-header-button red"></div>
                     </div>
+                </div>
+                <div class="terminal-body" id="bookmarks-terminal-body">
+                    <div class="terminal-command-body">
+                        <div class="terminal-command-info">
+                            <div class="terminal-name">son@personal</div>:<div class="terminal-directory">~/bookmarks</div>
+                        </div>
+                        <div class="terminal-command-text">bookmarks list</div>
+                    </div>
+                    <div class="terminal-output">
+                        <div id="bookmarks-list">
+                            <!-- <div class="no-bookmarks">no bookmarks added yet</div> -->
+                        </div>
+                        <br />
+                        <div class="terminal-note">type <q>bookmarks add [bookmark name] [bookmark url]</q> to add a bookmark!</div>
+                        <div class="terminal-note">type <q>bookmarks help</q> for more commands</div>
+                    </div>
+                    <div class="terminal-command-body">
+                        <div class="terminal-command-info">
+                            <div class="terminal-name">son@personal</div>:<div class="terminal-directory">~/bookmarks</div>
+                        </div>
+                        <div class="terminal-command-text">
+                            <form class="create-bookmark">
+                                <input type="text" class="bookmarks-textbox" />
+                            </form>
+                        </div>
+                    </div>
+                    <template id="add-bookmark-template">
+                        <div class="terminal-command-body">
+                            <div class="terminal-command-info">
+                                <div class="terminal-name">son@personal</div>:<div class="terminal-directory">~/bookmarks</div>
+                            </div>
+                            <div class="terminal-command-text">
+                                <form id="create-bookmark">
+                                    <input type="text" class="bookmarks-textbox" />
+                                </form>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
             <div id="desktop-bg"></div>
