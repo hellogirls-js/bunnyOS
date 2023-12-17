@@ -189,6 +189,7 @@ function bookmarkCommand(event: SubmitEvent) {
 
 setInterval(() => {
     id("date-button").innerHTML = dayjs().format("h:mmA");
+    id("clock-content").innerHTML = `${dayjs().format("h:mmA")} <div class="clock-date">${dayjs().format("ddd MMMM D, YYYY")}</div>`;
 }, 1000);
 
 const terminalWindows = classes("terminal-window") as HTMLCollectionOf<HTMLElement>;

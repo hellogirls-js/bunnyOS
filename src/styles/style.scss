@@ -3,7 +3,7 @@
 @use "partials/vars";
 @use "sass:color";
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Ubuntu+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Space+Mono:wght@400;700&family=Ubuntu+Mono:wght@400;700&display=swap');
 
 $nav-height: 3vh;
 $nav-margin: 2px;
@@ -177,6 +177,23 @@ body {
 
                 .no-bookmarks {
                     color: frappe.$subtext0;
+                }
+            }
+
+            &#clock-window {
+                width: 20%;
+                height: 25%;
+                top: 6vh;
+                right: 4vw;
+
+                #clock-content {
+                    font-family: "Silkscreen", sans-serif;
+                    text-align: center;
+                    font-size: 4rem;
+
+                    .clock-date {
+                        font-size: 1rem;
+                    }
                 }
             }
 
