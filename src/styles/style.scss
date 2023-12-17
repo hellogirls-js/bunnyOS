@@ -168,7 +168,6 @@ body {
             overflow-y: scroll;
             scrollbar-width: none;
             color: frappe.$text;
-            user-select: none;
 
             &#bookmarks-window {
                 width: 35%;
@@ -187,6 +186,7 @@ body {
                 justify-content: space-between;
                 gap: 5px;
                 padding: 4px 4px 8px 4px;
+                user-select: none;
 
                 .terminal-header-title {
                     color: frappe.$overlay1;

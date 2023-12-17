@@ -52,7 +52,9 @@ if (bookmarks === null || bookmarks.length === 0) {
 
 function createBookmark(name: string, url: string) {
     const currItem = localStorage.getItem("bookmarks");
+    console.log(currItem);
     let bookmarksArray: Bookmark[] = currItem === null ? [] : JSON.parse(currItem);
+    if (bookmarksArray === null) bookmarksArray = [];
     if (bookmarksArray.filter(bookmark => bookmark.name === name).length > 0) {
         throw `bookmark of name "${name}" already exists`;
     }
@@ -65,6 +67,25 @@ function createBookmark(name: string, url: string) {
     id("bookmarks-terminal-body").innerHTML += `
         <div class="terminal-output success">
             bookmark "${name}" added successfully!
+        </div>
+    `;
+}
+
+function deleteBookmark(name: string) {
+    const currItem = localStorage.getItem("bookmarks");
+    if (currItem === null) {
+        throw "there are no bookmarks to delete";
+    }
+
+    let bookmarksArray: Bookmark[] = currItem === null ? [] : JSON.parse(currItem);
+    if (bookmarksArray.filter(bookmark => bookmark.name === name).length === 0) {
+        throw `bookmark of name "${name}" does not exist`;
+    }
+    let newArr = bookmarksArray.filter(bookmark => bookmark.name !== name);
+    localStorage.setItem("bookmarks", newArr.length > 0 ? JSON.stringify(newArr) : null);
+    id("bookmarks-terminal-body").innerHTML += `
+        <div class="terminal-output success">
+            bookmark "${name}" has been successfully removed!
         </div>
     `;
 }
@@ -126,6 +147,9 @@ function processBookmarkCommand(event: SubmitEvent, value: string) {
                 break;
             case "list":
                 listBookmarks();
+                break;
+            case "delete":
+                deleteBookmark(splitCommand[2]);
                 break;
             default:
                 // not a proper command
