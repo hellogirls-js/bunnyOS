@@ -24,9 +24,13 @@
                             </div>
                             <div class="textfield">
                                 <label for="modal-user-location">location</label>
-                                <input type="text" placeholder="location" id="modal-user-location" name="modal-user-location" />
+                                <div class="icon-textbox">
+                                    <i class="ti ti-search"></i>
+                                    <input type="text" placeholder="location (city name or zip code)" id="modal-user-location" name="modal-user-location" />
+                                    <div id="location-search-results">
+                                    </div>
+                                </div>
                             </div>
-                            <input type="submit" value="save user settings" />
                         </form>
                     </fieldset>
                     <fieldset>
@@ -40,11 +44,15 @@
                         <label for="image-bg">image</label>
                     </fieldset>
                 </div>
-                <input type="button" value="reset user settings" />
+                <input type="button" value="reset all settings" />
             </div>
         </div>
         <main id="desktop-container">
             <nav>
+                <button id="weather-button">
+                    <i class="ti ti-temperature-off"></i>
+                    <div id="weather-button-temp">no location set</div>
+                </button>
                 <button id="date-button">
 
                 </button>
@@ -116,5 +124,11 @@
             <div id="desktop-bg"></div>
         </main>
         <script src="/index.js"></script>
+        <template id="location-result-template">
+            <div class="location-result">
+                <div class="location-name"></div>
+                <div class="location-info"></div>
+            </div>
+        </template>
     </body>
 </html>

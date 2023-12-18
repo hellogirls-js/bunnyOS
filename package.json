@@ -6,6 +6,7 @@
     "build": "webpack"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.202",
     "css-loader": "^6.8.1",
     "eslint": "^8.55.0",
     "eslint-plugin-prettier": "^5.0.1",
@@ -23,7 +24,9 @@
     "webpack-dev-server": "^4.15.1"
   },
   "dependencies": {
+    "axios": "^1.6.2",
     "dayjs": "^1.11.10",
+    "lodash": "^4.17.21",
     "node-sass": "^9.0.0",
     "path": "^0.12.7"
   }

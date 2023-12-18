@@ -23,13 +23,13 @@ body {
     height: 100vh;
 
     input[type=text] {
-        background: transparent;
-        border: 1px solid frappe.$text;
+        background: frappe.$crust;
+        border: vars.$border-textbox;
         border-radius: vars.$radius-sm;
         padding: 4px 10px;
 
         &:focus {
-            outline: none;
+            outline: frappe.$lavender;
         }
     }
 
@@ -55,6 +55,17 @@ body {
             box-shadow: vars.$shadow-md;
             padding: 10px;
             font-size: 1.3rem;
+
+            input[type=submit], input[type=button] {
+                background: frappe.$surface0;
+                border: 1px solid frappe.$subtext0;
+                border-radius: vars.$radius-sm;
+                padding: 5px;
+            }
+
+            input[type=button] {
+                margin-top: 10px;
+            }
 
             h1 {
                 text-align: center;
@@ -87,6 +98,55 @@ body {
 
                         label {
                             flex-grow: 1;
+                        }
+
+                        .icon-textbox {
+                            position: relative;
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                            flex-basis: 80%;
+                            border: vars.$border-textbox;
+                            border-radius: vars.$radius-sm;
+                            padding: 4px 10px;
+                            background: frappe.$crust;
+
+                            input[type=text] {
+                                flex-grow: 1;
+                                padding: 0;
+                                border: none;
+                            }
+
+                            #location-search-results {
+                                position: absolute;
+                                display: none;
+                                bottom: -51px;
+                                left: 0;
+                                width: 100%;
+                                background: frappe.$surface0;
+                                border: 1px solid frappe.$text;
+                                border-radius: vars.$radius-sm;
+                                box-shadow: vars.$shadow-sm;
+
+                                .location-result {
+                                    margin: 10px 0px;
+                                    padding: 4px;
+                                    cursor: pointer;
+
+                                    &:hover {
+                                        background-color: frappe.$base;
+                                    }
+
+                                    .location-name {
+                                        font-weight: bold;
+                                    }
+
+                                    .location-info {
+                                        color: frappe.$subtext0;
+                                        font-size: 0.9rem;
+                                    }
+                                }
+                            }
                         }
 
                         input[type=text] {
@@ -139,6 +199,13 @@ body {
                 outline: none;
                 color: frappe.$text;
 
+                &#weather-button {
+                    position: absolute;
+                    left: 5px;
+                    display: flex;
+                    gap: 5px;
+                }
+
                 &#date-button {
                     margin: auto;
                 }
@@ -185,6 +252,7 @@ body {
                 height: 25%;
                 top: 6vh;
                 right: 4vw;
+                user-select: none;
 
                 #clock-content {
                     font-family: "Silkscreen", sans-serif;

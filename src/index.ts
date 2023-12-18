@@ -1,5 +1,8 @@
 import dayjs from "dayjs";
+import _ from "lodash";
+import axios from "axios";
 import "./styles/style.scss";
+import env from "./data/env.json";
 
 // utility functions
 
@@ -14,7 +17,6 @@ function classes(className: string): HTMLCollectionOf<Element> {
 // modal functions
 
 id("modal-container").onclick = (event) => {
-    console.log(event.target);
     if ((event.target as HTMLElement).id === "modal-container") {
         document.getElementById("modal-container").style.display = "none";
     }
@@ -52,7 +54,6 @@ if (bookmarks === null || bookmarks.length === 0) {
 
 function createBookmark(name: string, url: string) {
     const currItem = localStorage.getItem("bookmarks");
-    console.log(currItem);
     let bookmarksArray: Bookmark[] = currItem === null ? [] : JSON.parse(currItem);
     if (bookmarksArray === null) bookmarksArray = [];
     if (bookmarksArray.filter(bookmark => bookmark.name === name).length > 0) {
@@ -185,11 +186,85 @@ function bookmarkCommand(event: SubmitEvent) {
 
 (classes("create-bookmark")[classes("create-bookmark").length - 1] as HTMLFormElement).onsubmit = bookmarkCommand;
 
+// weather functions
+
+if (localStorage.getItem("locationId") !== null) {
+    axios.get(`${env.WEATHER_API_URL}search.json?key=${env.WEATHER_API_KEY}&q=${localStorage.getItem("locationId")}`).then(res => res.data).then(locations => {
+        (id("modal-user-location") as HTMLInputElement).value = (locations as LocationObject[])[0].name.toLocaleLowerCase(); 
+    }).catch(err => console.error(err));
+
+    axios.get(`${env.WEATHER_API_URL}current.json?key=${env.WEATHER_API_KEY}&q=${localStorage.getItem("locationId")}`).then(res => res.data).then(data => {
+        const { current } = data;
+        id("weather-button").getElementsByTagName("i")[0].classList.replace("ti-temperature-off", localStorage.getItem("temperatureUnit") === null || localStorage.getItem("temperatureUnit") === "celsius" ? "ti-temperature-celsius" : "ti-temperature-fahrenheit");
+        id("weather-button-temp").innerHTML = localStorage.getItem("temperatureUnit") === null || localStorage.getItem("temperatureUnit") === "celsius" ? current.temp_c : current.temp_f;
+    }).catch(err => console.error(err))
+}
+
+function selectLocation(event: MouseEvent) {
+    let target: HTMLElement = event.target as HTMLElement;
+    const RESULT_CONTAINER = "location-search-results";
+    if (target.className === "location-name" || target.className === "location-info") {
+        target = target.parentElement;
+    }
+    localStorage.setItem("locationId", target.dataset.locationId);
+    axios.get(`${env.WEATHER_API_URL}search.json?key=${env.WEATHER_API_KEY}&q=${target.dataset.locationId}`).then(res => res.data).then(locations => {
+        (id("modal-user-location") as HTMLInputElement).value = (locations as LocationObject[])[0].name.toLocaleLowerCase(); 
+    }).catch(err => console.error(err));
+    
+    id(RESULT_CONTAINER).style.display = "none";
+}  
+
+id("modal-user-location").addEventListener("input", _.debounce((event: InputEvent) => {
+    const RESULT_CONTAINER = "location-search-results";
+    const input: HTMLInputElement = event.target as HTMLInputElement;
+    if (input.value.length === 0) {
+        id(RESULT_CONTAINER).style.display = "none";
+    } else {
+        axios.get(`${env.WEATHER_API_URL}search.json?key=${env.WEATHER_API_KEY}&q=${input.value}`)
+         .then(res => {
+            if (res.status !== 200 && res.status !== 201) {
+                throw  `could not fetch locations (status code: ${res.status})`;
+            }
+            return res.data;
+         })
+         .then(locations => {
+            id(RESULT_CONTAINER).style.display = "block";
+            id(RESULT_CONTAINER).innerHTML = "";
+            if (locations.length === 0) {
+                id(RESULT_CONTAINER).innerHTML = `
+                    <div style="padding: 4px">no results found :(</div>
+                `;
+            } else {
+               locations.forEach((loc: LocationObject) => {
+                    const templateContent = (id("location-result-template") as HTMLTemplateElement).content.cloneNode(true);
+                    id(RESULT_CONTAINER).appendChild(templateContent);
+                    classes("location-name")[classes("location-name").length - 1].innerHTML = loc.name.toLocaleLowerCase();
+                    classes("location-info")[classes("location-info").length - 1].innerHTML = `${loc.region ? loc.region.toLocaleLowerCase() : ""}, ${loc.country.toLocaleLowerCase()}, (${loc.lat}, ${loc.lon})`;
+                    (classes("location-result")[classes("location-result").length - 1] as HTMLElement).onclick = selectLocation;
+                    (classes("location-result")[classes("location-result").length - 1] as HTMLElement).setAttribute("data-location-id", `id:${loc.id}`);
+                }); 
+            }
+            
+            id(RESULT_CONTAINER).style.bottom = `-${id(RESULT_CONTAINER).offsetHeight}px`;
+         }).catch(err => {
+            // console.error(err);
+            id(RESULT_CONTAINER).style.display = "block";
+            id(RESULT_CONTAINER).innerHTML = `
+                <div id="location-search-error">
+                    ${err}
+                </div>
+            `;
+         });
+    }
+}, 500));
+
 // misc functions
 
+let showColon = true;
 setInterval(() => {
+    showColon = !showColon;
     id("date-button").innerHTML = dayjs().format("h:mmA");
-    id("clock-content").innerHTML = `${dayjs().format("h:mmA")} <div class="clock-date">${dayjs().format("ddd MMMM D, YYYY")}</div>`;
+    id("clock-content").innerHTML = `${dayjs().format("h") + `<span style="visibility: ${showColon ? "visible" : "hidden"}">:</span>` + dayjs().format("mmA")} <div class="clock-date">${dayjs().format("ddd MMMM D, YYYY")}</div>`;
 }, 1000);
 
 const terminalWindows = classes("terminal-window") as HTMLCollectionOf<HTMLElement>;
