@@ -12,6 +12,7 @@ $nav-margin: 2px;
     box-sizing: border-box;
     font-family: "Ubuntu Mono", monospace;
     color: frappe.$text;
+    accent-color: frappe.$lavender;
     &::selection {
         background-color: color.change(frappe.$crust, $alpha: 0.6);
         color: inherit;
@@ -89,6 +90,13 @@ body {
                     legend {
                         font-size: 1.5rem;
                         padding: 0px 5px;
+                    }
+
+                    .radio-options {
+                        display: flex;
+                        align-items: center;
+                        gap: 100px;
+                        margin-top: 3px;
                     }
 
                     .textfield {
@@ -170,7 +178,7 @@ body {
             height: 100vh;
             top: 0;
             z-index: 0;
-            background-image: url("../assets/card_still_full1_2660_normal.png");
+            background: url("../assets/card_still_full1_2660_normal.png");
             background-repeat: no-repeat;
             background-size: cover;
             opacity: 0.8;
@@ -203,6 +211,7 @@ body {
                     position: absolute;
                     left: 5px;
                     display: flex;
+                    align-items: center;
                     gap: 5px;
                 }
 
@@ -262,6 +271,38 @@ body {
                     .clock-date {
                         font-size: 1rem;
                     }
+                }
+            }
+
+            &#google-window {
+                top: 50vh;
+                left: 10vw;
+
+                #google-terminal-body {
+                    padding: 10px 4px 30px 4px;
+
+                    #google-search-command-container {
+                        display: flex;
+                        align-items: baseline;
+                        width: 100%;
+                        gap: 5px;
+
+                        #google-search-prefix {
+                            font-weight: bold;
+                            color: frappe.$rosewater;
+                        }
+
+                        input[type=text] {
+                            width: 100%;
+                            background-color: transparent;
+                            border: none;
+                            outline: none;
+                            color: frappe.$text;
+                            caret-color: frappe.$rosewater;
+                            caret-shape: bar;
+                            padding: 0;
+                        }
+                    }  
                 }
             }
 

@@ -188,6 +188,8 @@ function bookmarkCommand(event: SubmitEvent) {
 
 // weather functions
 
+let temp_c: number; let temp_f: number;
+
 if (localStorage.getItem("locationId") !== null) {
     axios.get(`${env.WEATHER_API_URL}search.json?key=${env.WEATHER_API_KEY}&q=${localStorage.getItem("locationId")}`).then(res => res.data).then(locations => {
         (id("modal-user-location") as HTMLInputElement).value = (locations as LocationObject[])[0].name.toLocaleLowerCase(); 
@@ -197,8 +199,30 @@ if (localStorage.getItem("locationId") !== null) {
         const { current } = data;
         id("weather-button").getElementsByTagName("i")[0].classList.replace("ti-temperature-off", localStorage.getItem("temperatureUnit") === null || localStorage.getItem("temperatureUnit") === "celsius" ? "ti-temperature-celsius" : "ti-temperature-fahrenheit");
         id("weather-button-temp").innerHTML = localStorage.getItem("temperatureUnit") === null || localStorage.getItem("temperatureUnit") === "celsius" ? current.temp_c : current.temp_f;
+        temp_c = current.temp_c;
+        temp_f = current.temp_f;
     }).catch(err => console.error(err))
 }
+
+if (localStorage.getItem("temperatureUnit") !== null) {
+    if (localStorage.getItem("temperatureUnit") === "fahrenheit") {
+        (id("radio-f") as HTMLInputElement).checked === true;
+    } else {
+        (id("radio-c") as HTMLInputElement).checked === true;
+    }
+} else {
+    (id("radio-c") as HTMLInputElement).checked === true;
+}
+
+function setTempUnit(event: InputEvent) {
+    const target: HTMLInputElement = event.target as HTMLInputElement;
+    localStorage.setItem("temperatureUnit", target.value);
+    id("weather-button").getElementsByTagName("i")[0].classList.replace(target.value === "fahrenheit" ? "ti-temperature-celsius" : "ti-temperature-fahrenheit", target.value === "celsius" ? "ti-temperature-celsius" : "ti-temperature-fahrenheit");
+    id("weather-button-temp").innerHTML = localStorage.getItem("temperatureUnit") === null || localStorage.getItem("temperatureUnit") === "celsius" ? `${temp_c}` : `${temp_f}`;
+}
+
+id("radio-f").oninput = setTempUnit;
+id("radio-c").oninput = setTempUnit;
 
 function selectLocation(event: MouseEvent) {
     let target: HTMLElement = event.target as HTMLElement;
@@ -257,6 +281,14 @@ id("modal-user-location").addEventListener("input", _.debounce((event: InputEven
          });
     }
 }, 500));
+
+// search functions
+
+id("google-search-form").onsubmit = (event) => {
+    event.preventDefault();
+
+    window.location.href = `https://google.com/search?q=${(id("google-search-text") as HTMLInputElement).value.replaceAll(" ", "+")}`;
+}
 
 // misc functions
 

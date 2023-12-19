@@ -16,19 +16,31 @@
                         <form id="user-settings">
                             <div class="textfield">
                                 <label for="modal-user-name">name</label>
-                                <input type="text" placeholder="name" id="modal-user-name" name="modal-user-name" />
+                                <input type="text" placeholder="name" id="modal-user-name" name="modal-user-name" aria-label="user name" />
                             </div>
                             <div class="textfield">
                                 <label for="modal-device-name">device name</label>
-                                <input type="text" placeholder="device name" id="modal-device-name" name="modal-device-name" />
+                                <input type="text" placeholder="device name" id="modal-device-name" name="modal-device-name" aria-label="device name" />
                             </div>
                             <div class="textfield">
                                 <label for="modal-user-location">location</label>
                                 <div class="icon-textbox">
                                     <i class="ti ti-search"></i>
-                                    <input type="text" placeholder="location (city name or zip code)" id="modal-user-location" name="modal-user-location" />
+                                    <input type="text" placeholder="location (city name or zip code)" id="modal-user-location" name="modal-user-location" aria-label="user location" />
                                     <div id="location-search-results">
                                     </div>
+                                </div>
+                            </div>
+
+                            <div>temperature units</div>
+                            <div class="radio-options">
+                                <div class="radio-group">
+                                    <input type="radio" name="temperature-units" id="radio-f" aria-label="fahrenheit" value="fahrenheit" />
+                                    <label for="fahrenheit">&deg;f</label>
+                                </div>
+                                <div class="radio-group">
+                                    <input type="radio" name="temperature-units" id="radio-c" aria-label="celsius" value="celsius" />
+                                    <label for="celsius">&deg;c</label>
                                 </div>
                             </div>
                         </form>
@@ -119,6 +131,38 @@
                 </div>
                 <div class="terminal-body" id="clock-terminal-body">
                     <div id="clock-content"></div>
+                </div>
+            </div>
+            <div class="terminal-window" id="google-window">
+                <div class="terminal-header" id="google-window-header">
+                    <div class="terminal-header-title">terminal: ~/google</div>
+                    <div class="terminal-header-buttons">
+                        <div class="terminal-header-button yellow"></div>
+                        <div class="terminal-header-button green"></div>
+                        <div class="terminal-header-button red"></div>
+                    </div>
+                </div>
+                <div class="terminal-body" id="google-terminal-body">
+                    <pre id="google-ascii">
+_______  _______  _______  _______  _______  _        _______ 
+(  ____ \(  ___  )(  ___  )(  ___  )(  ____ \( \      (  ____ \
+| (    \/| (   ) || (   ) || (   ) || (    \/| (      | (    \/
+| |      | |   | || |   | || |   | || |      | |      | (__    
+| | ____ | |   | || |   | || |   | || | ____ | |      |  __)
+| | \_  )| |   | || |   | || |   | || | \_  )| |      | (
+| (___) || (___) || (___) || (___) || (___) || (____/\| (____/\
+(_______)(_______)(_______)(_______)(_______)(_______/(_______/
+                    </pre>
+                    <div id="google-search-command-container">
+                        <div id="google-search-prefix">
+                            search &gt;
+                        </div>
+                        <div id="google-search-bar">
+                            <form id="google-search-form">
+                                <input type="text" id="google-search-text" />
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="desktop-bg"></div>
