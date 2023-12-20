@@ -1,6 +1,8 @@
 import dayjs from "dayjs";
 import _ from "lodash";
 import axios from "axios";
+import aalib from "aalib.js";
+
 import "./styles/style.scss";
 import env from "./data/env.json";
 
@@ -27,6 +29,31 @@ id("settings-button").onclick = (event) => {
 }
 
 // bookmark functions
+
+const userName = localStorage.getItem("username") || "null";
+const deviceName = localStorage.getItem("deviceName") || "computer";
+
+(id("modal-user-name") as HTMLInputElement).value = localStorage.getItem("username") || "";
+(id("modal-device-name") as HTMLInputElement).value = localStorage.getItem("deviceName") || "";
+
+id("modal-device-name").addEventListener("input", _.debounce(function (event: InputEvent) {
+    localStorage.setItem("deviceName", (event.target as HTMLInputElement).value);
+    for (let i = 0; i < classes("terminal-user-name").length; i++) {
+        classes("terminal-device-name")[i].textContent = (event.target as HTMLInputElement).value;
+    }
+}));
+
+id("modal-user-name").addEventListener("input", _.debounce(function (event: InputEvent) {
+    localStorage.setItem("username", (event.target as HTMLInputElement).value);
+    for (let i = 0; i < classes("terminal-user-name").length; i++) {
+        classes("terminal-user-name")[i].textContent = (event.target as HTMLInputElement).value;
+    }
+}));
+
+for (let i = 0; i < classes("terminal-user-name").length; i++) {
+    classes("terminal-user-name")[i].textContent = userName;
+    classes("terminal-device-name")[i].textContent = deviceName;
+}
 
 const bookmarks = localStorage.getItem("bookmarks");
 
@@ -179,6 +206,10 @@ function bookmarkCommand(event: SubmitEvent) {
         formEl.replaceWith(newElement);
         const templateContent = (id("add-bookmark-template") as HTMLTemplateElement).content.cloneNode(true);
         id("bookmarks-terminal-body").appendChild(templateContent);
+        for (let i = 0; i < classes("terminal-user-name").length; i++) {
+            classes("terminal-user-name")[i].textContent = userName;
+            classes("terminal-device-name")[i].textContent = deviceName;
+        }
         id("bookmarks-terminal-body").getElementsByTagName("form")[0].onsubmit = bookmarkCommand;
         (classes("bookmarks-textbox")[0] as HTMLInputElement).focus();
     }
@@ -188,30 +219,58 @@ function bookmarkCommand(event: SubmitEvent) {
 
 // weather functions
 
-let temp_c: number; let temp_f: number;
+let temp_c: number; let temp_f: number; let locationInfo: LocationObject;
 
 if (localStorage.getItem("locationId") !== null) {
     axios.get(`${env.WEATHER_API_URL}search.json?key=${env.WEATHER_API_KEY}&q=${localStorage.getItem("locationId")}`).then(res => res.data).then(locations => {
         (id("modal-user-location") as HTMLInputElement).value = (locations as LocationObject[])[0].name.toLocaleLowerCase(); 
+        locationInfo = (locations as LocationObject[])[0];
     }).catch(err => console.error(err));
 
     axios.get(`${env.WEATHER_API_URL}current.json?key=${env.WEATHER_API_KEY}&q=${localStorage.getItem("locationId")}`).then(res => res.data).then(data => {
         const { current } = data;
-        id("weather-button").getElementsByTagName("i")[0].classList.replace("ti-temperature-off", localStorage.getItem("temperatureUnit") === null || localStorage.getItem("temperatureUnit") === "celsius" ? "ti-temperature-celsius" : "ti-temperature-fahrenheit");
-        id("weather-button-temp").innerHTML = localStorage.getItem("temperatureUnit") === null || localStorage.getItem("temperatureUnit") === "celsius" ? current.temp_c : current.temp_f;
+        const tempUnit = localStorage.getItem("temperatureUnit");
+
+        // put weather data in the navbar
+        id("weather-button").getElementsByTagName("i")[0].classList.replace("ti-temperature-off", tempUnit === null || tempUnit === "celsius" ? "ti-temperature-celsius" : "ti-temperature-fahrenheit");
+        id("weather-button-temp").innerHTML = tempUnit === null || tempUnit === "celsius" ? current.temp_c : current.temp_f;
         temp_c = current.temp_c;
         temp_f = current.temp_f;
+
+        // put weather data in the terminal window
+        id("weather-content").innerHTML = `
+            <pre id="weather-icon">
+            </pre>
+            <div id="weather-information">
+                <div id="weather-location">${locationInfo.name.toLowerCase()}${locationInfo.region ? `, ${locationInfo.region.toLocaleLowerCase()}` : ""}</div>
+                <div id="weather-temp">${tempUnit === null || tempUnit === "celsius" ? `${temp_c}°C` : `${temp_f}°F`}</div>
+                <div id="weather-desc">${current.condition.text.toLowerCase()}</div>
+            </div>
+        `;
+
+        aalib.read.image.fromURL(current.condition.icon)
+            .map(aalib.aa({
+                width: 35,
+                height: 15,
+                colored: false
+            }))
+            .map(aalib.render.html({
+                el: id("weather-icon"),
+                background: "transparent",
+                color: "hsl(227, 70%, 87%)"
+            })).subscribe();
+
     }).catch(err => console.error(err))
 }
 
 if (localStorage.getItem("temperatureUnit") !== null) {
     if (localStorage.getItem("temperatureUnit") === "fahrenheit") {
-        (id("radio-f") as HTMLInputElement).checked === true;
+        (id("radio-f") as HTMLInputElement).checked = true;
     } else {
-        (id("radio-c") as HTMLInputElement).checked === true;
+        (id("radio-c") as HTMLInputElement).checked = true;
     }
 } else {
-    (id("radio-c") as HTMLInputElement).checked === true;
+    (id("radio-c") as HTMLInputElement).checked = true;
 }
 
 function setTempUnit(event: InputEvent) {
@@ -219,6 +278,7 @@ function setTempUnit(event: InputEvent) {
     localStorage.setItem("temperatureUnit", target.value);
     id("weather-button").getElementsByTagName("i")[0].classList.replace(target.value === "fahrenheit" ? "ti-temperature-celsius" : "ti-temperature-fahrenheit", target.value === "celsius" ? "ti-temperature-celsius" : "ti-temperature-fahrenheit");
     id("weather-button-temp").innerHTML = localStorage.getItem("temperatureUnit") === null || localStorage.getItem("temperatureUnit") === "celsius" ? `${temp_c}` : `${temp_f}`;
+    id("weather-temp").textContent = localStorage.getItem("temperatureUnit") === null || localStorage.getItem("temperatureUnit") === "celsius" ? `${temp_c}°C` : `${temp_f}°F`;
 }
 
 id("radio-f").oninput = setTempUnit;

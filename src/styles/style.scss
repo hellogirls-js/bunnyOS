@@ -306,6 +306,29 @@ body {
                 }
             }
 
+            &#weather-window {
+                top: 40vh;
+                right: 10vw;
+                width: 20%;
+                min-height: 10%;
+
+                #weather-terminal-body {
+                    padding: 4px;
+                    padding-bottom: 10px;
+
+                    #weather-content {
+                        display: flex;
+                        justify-content: center;
+                        gap: 15px;
+
+                        #weather-temp {
+                            font-size: 2.5rem;
+                            font-weight: bold;
+                        }
+                    }
+                }
+            }
+
             .terminal-header {
                 display: flex;
                 align-items: center;
@@ -389,6 +412,10 @@ body {
                     .terminal-name {
                             color: frappe.$green;
                             font-weight: 700;
+
+                            .terminal-user-name, .terminal-device-name {
+                                color: frappe.$green;
+                            }
                         }
                         
                         .terminal-directory {

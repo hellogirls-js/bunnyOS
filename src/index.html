@@ -72,6 +72,7 @@
                     <i class="ti ti-settings"></i>
                 </button>
             </nav>
+
             <div class="terminal-window" id="bookmarks-window">
                 <div class="terminal-header" id="bookmarks-window-header">
                     <div class="terminal-header-title">terminal: ~/bookmarks</div>
@@ -84,7 +85,7 @@
                 <div class="terminal-body" id="bookmarks-terminal-body">
                     <div class="terminal-command-body">
                         <div class="terminal-command-info">
-                            <div class="terminal-name">son@personal</div>:<div class="terminal-directory">~/bookmarks</div>
+                            <div class="terminal-name"><span class="terminal-user-name"></span>@<span class="terminal-device-name"></span></div>:<div class="terminal-directory">~/bookmarks</div>
                         </div>
                         <div class="terminal-command-text">bookmarks list</div>
                     </div>
@@ -98,7 +99,7 @@
                     </div>
                     <div class="terminal-command-body">
                         <div class="terminal-command-info">
-                            <div class="terminal-name">son@personal</div>:<div class="terminal-directory">~/bookmarks</div>
+                            <div class="terminal-name"><span class="terminal-user-name"></span>@<span class="terminal-device-name"></span></div>:<div class="terminal-directory">~/bookmarks</div>
                         </div>
                         <div class="terminal-command-text">
                             <form class="create-bookmark">
@@ -109,7 +110,7 @@
                     <template id="add-bookmark-template">
                         <div class="terminal-command-body">
                             <div class="terminal-command-info">
-                                <div class="terminal-name">son@personal</div>:<div class="terminal-directory">~/bookmarks</div>
+                                <div class="terminal-name"><span class="terminal-user-name"></span>@<span class="terminal-device-name"></span></div>:<div class="terminal-directory">~/bookmarks</div>
                             </div>
                             <div class="terminal-command-text">
                                 <form id="create-bookmark">
@@ -120,6 +121,7 @@
                     </template>
                 </div>
             </div>
+
             <div class="terminal-window" id="clock-window">
                 <div class="terminal-header" id="clock-window-header">
                     <div class="terminal-header-title">terminal: ~/clock</div>
@@ -133,6 +135,7 @@
                     <div id="clock-content"></div>
                 </div>
             </div>
+
             <div class="terminal-window" id="google-window">
                 <div class="terminal-header" id="google-window-header">
                     <div class="terminal-header-title">terminal: ~/google</div>
@@ -144,14 +147,14 @@
                 </div>
                 <div class="terminal-body" id="google-terminal-body">
                     <pre id="google-ascii">
-_______  _______  _______  _______  _______  _        _______ 
-(  ____ \(  ___  )(  ___  )(  ___  )(  ____ \( \      (  ____ \
-| (    \/| (   ) || (   ) || (   ) || (    \/| (      | (    \/
-| |      | |   | || |   | || |   | || |      | |      | (__    
-| | ____ | |   | || |   | || |   | || | ____ | |      |  __)
-| | \_  )| |   | || |   | || |   | || | \_  )| |      | (
-| (___) || (___) || (___) || (___) || (___) || (____/\| (____/\
-(_______)(_______)(_______)(_______)(_______)(_______/(_______/
+_______  _______  _______  _______  _        _______ 
+(  ____ \(  ___  )(  ___  )(  ____ \( \      (  ____ \
+| (    \/| (   ) || (   ) || (    \/| (      | (    \/
+| |      | |   | || |   | || |      | |      | (__    
+| | ____ | |   | || |   | || | ____ | |      |  __)
+| | \_  )| |   | || |   | || | \_  )| |      | (
+| (___) || (___) || (___) || (___) || (____/\| (____/\
+(_______)(_______)(_______)(_______)(_______/(_______/
                     </pre>
                     <div id="google-search-command-container">
                         <div id="google-search-prefix">
@@ -165,6 +168,21 @@ _______  _______  _______  _______  _______  _        _______
                     </div>
                 </div>
             </div>
+
+            <div class="terminal-window" id="weather-window">
+                <div class="terminal-header" id="weather-window-header">
+                    <div class="terminal-header-title">terminal: ~/weather</div>
+                    <div class="terminal-header-buttons">
+                        <div class="terminal-header-button yellow"></div>
+                        <div class="terminal-header-button green"></div>
+                        <div class="terminal-header-button red"></div>
+                    </div>
+                </div>
+                <div class="terminal-body" id="weather-terminal-body">
+                    <div id="weather-content">no weather information available</div>
+                </div>
+            </div>
+
             <div id="desktop-bg"></div>
         </main>
         <script src="/index.js"></script>

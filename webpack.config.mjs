@@ -29,6 +29,9 @@ export default {
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },
+  optimization: {
+    minimize: true,
+  },
   output: {
     filename: "index.js",
     path: path.resolve(__dirname, "src/scripts"),
