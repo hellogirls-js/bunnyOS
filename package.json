@@ -9,6 +9,7 @@
     "@types/firefox-webext-browser": "^120.0.0",
     "@types/lodash": "^4.14.202",
     "css-loader": "^6.8.1",
+    "dotenv-webpack": "^8.0.1",
     "eslint": "^8.55.0",
     "eslint-plugin-prettier": "^5.0.1",
     "prettier": "^3.1.1",
