@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import _ from "lodash";
 import axios from "axios";
 import aalib from "aalib.js";
+import dotenv from "dotenv";
 
 import "./styles/style.scss";
 import env from "./data/env.json";
@@ -326,12 +327,12 @@ function bookmarkCommand(event: SubmitEvent) {
 let temp_c: number; let temp_f: number; let locationInfo: LocationObject;
 
 if (localStorage.getItem("locationId") !== null) {
-    axios.get(`${env.WEATHER_API_URL}search.json?key=${env.WEATHER_API_KEY}&q=${localStorage.getItem("locationId")}`).then(res => res.data).then(locations => {
+    axios.get(`${process.env.WEATHER_API_URL}search.json?key=${process.env.WEATHER_API_KEY}&q=${localStorage.getItem("locationId")}`).then(res => res.data).then(locations => {
         (id("modal-user-location") as HTMLInputElement).value = (locations as LocationObject[])[0].name.toLocaleLowerCase(); 
         locationInfo = (locations as LocationObject[])[0];
     }).catch(err => console.error(err));
 
-    axios.get(`${env.WEATHER_API_URL}current.json?key=${env.WEATHER_API_KEY}&q=${localStorage.getItem("locationId")}`).then(res => res.data).then(data => {
+    axios.get(`${process.env.WEATHER_API_URL}current.json?key=${process.env.WEATHER_API_KEY}&q=${localStorage.getItem("locationId")}`).then(res => res.data).then(data => {
         const { current } = data;
         const tempUnit = localStorage.getItem("temperatureUnit");
 
@@ -395,7 +396,7 @@ function selectLocation(event: MouseEvent) {
         target = target.parentElement;
     }
     localStorage.setItem("locationId", target.dataset.locationId);
-    axios.get(`${env.WEATHER_API_URL}search.json?key=${env.WEATHER_API_KEY}&q=${target.dataset.locationId}`).then(res => res.data).then(locations => {
+    axios.get(`${process.env.WEATHER_API_URL}search.json?key=${process.env.WEATHER_API_KEY}&q=${target.dataset.locationId}`).then(res => res.data).then(locations => {
         (id("modal-user-location") as HTMLInputElement).value = (locations as LocationObject[])[0].name.toLocaleLowerCase(); 
     }).catch(err => console.error(err));
     
@@ -408,7 +409,7 @@ id("modal-user-location").addEventListener("input", _.debounce((event: InputEven
     if (input.value.length === 0) {
         id(RESULT_CONTAINER).style.display = "none";
     } else {
-        axios.get(`${env.WEATHER_API_URL}search.json?key=${env.WEATHER_API_KEY}&q=${input.value}`)
+        axios.get(`${process.env.WEATHER_API_URL}search.json?key=${process.env.WEATHER_API_KEY}&q=${input.value}`)
          .then(res => {
             if (res.status !== 200 && res.status !== 201) {
                 throw  `could not fetch locations (status code: ${res.status})`;

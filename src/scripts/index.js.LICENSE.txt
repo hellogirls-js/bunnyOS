@@ -18,8 +18,6 @@
 
 /*! ../../node_modules/css-loader/dist/runtime/api.js */
 
-/*! ../../node_modules/css-loader/dist/runtime/getUrl.js */
-
 /*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */
 
 /*! ../../operator/do */
@@ -33,8 +31,6 @@
 /*! ../aafont */
 
 /*! ../adapters/adapters.js */
-
-/*! ../assets/card_still_full1_2660_normal.png */
 
 /*! ../cancel/CanceledError.js */
 
@@ -152,8 +148,6 @@
 
 /*! ./core/rgbProcessor */
 
-/*! ./data/env.json */
-
 /*! ./defaults/index.js */
 
 /*! ./dispatchRequest.js */
@@ -261,10 +255,6 @@
 /*!**********************!*\
   !*** ./src/index.ts ***!
   \**********************/
-
-/*!***************************!*\
-  !*** ./src/data/env.json ***!
-  \***************************/
 
 /*!*******************************!*\
   !*** ./src/styles/style.scss ***!
@@ -466,10 +456,6 @@
   !*** ./node_modules/css-loader/dist/runtime/api.js ***!
   \*****************************************************/
 
-/*!*****************************************************!*\
-  !*** ./src/assets/card_still_full1_2660_normal.png ***!
-  \*****************************************************/
-
 /*!******************************************************!*\
   !*** ./node_modules/aalib.js/lib/filters/inverse.js ***!
   \******************************************************/
@@ -524,10 +510,6 @@
 
 /*!********************************************************!*\
   !*** ./node_modules/axios/lib/helpers/parseHeaders.js ***!
-  \********************************************************/
-
-/*!********************************************************!*\
-  !*** ./node_modules/css-loader/dist/runtime/getUrl.js ***!
   \********************************************************/
 
 /*!*********************************************************!*\
