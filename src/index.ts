@@ -18,6 +18,10 @@ function classes(className: string): HTMLCollectionOf<Element> {
 
 // modal functions
 
+id("reset-settings").onclick = (event) => {
+    localStorage.clear();
+}
+
 id("modal-container").onclick = (event) => {
     if ((event.target as HTMLElement).id === "modal-container") {
         document.getElementById("modal-container").style.display = "none";
@@ -27,6 +31,106 @@ id("modal-container").onclick = (event) => {
 id("settings-button").onclick = (event) => {
     document.getElementById("modal-container").style.display = "flex";
 }
+
+const bgType: "solid" | "gradient" | "image" | null = localStorage.getItem("bgType") as "solid" | "gradient" | "image" | null;
+const bgValue = localStorage.getItem("bgValue") ?? "#ffffff";
+
+console.log(bgType);
+
+if (bgType === "image") {
+    (id("image-bg") as HTMLInputElement).checked = true;
+    id("image-container").style.display = "block";
+} else if (bgType === "gradient") {
+    (id("gradient-bg") as HTMLInputElement).checked = true;
+    id("gradient-container").style.display = "block";
+} else {
+    (id("solid-color-bg") as HTMLInputElement).checked = true;
+    id("solid-color-container").style.display = "block";
+}
+
+for (let i = 0; i < classes("modal-background-type").length; i++) {
+    classes("modal-background-type")[i].addEventListener("input", function (event: InputEvent) {
+        const target: HTMLInputElement = event.target as HTMLInputElement;
+        let idArr = target.id.split("-");
+
+        idArr.pop();
+        idArr.push("container");
+
+        const idName = idArr.join("-");
+
+        console.log(id(idName));
+
+        for (let j = 0; j < classes("picker-container").length; j++) {
+            (classes("picker-container")[j] as HTMLElement).style.display = "none";
+        }
+    
+        id(idName).style.display = "block";
+
+        localStorage.setItem("bgType", idArr[0]);
+    });
+}
+
+(id("solid-color-picker") as HTMLInputElement).value = bgType === "solid" && bgValue !== null ? bgValue : "#ffffff";
+
+(id("solid-color-picker") as HTMLInputElement).addEventListener("input", _.debounce(function (event: InputEvent) {
+    const target: HTMLInputElement = event.target as HTMLInputElement;
+    id("desktop-bg").style.backgroundColor = target.value;
+    localStorage.setItem("bgValue", target.value);
+}, 500));
+
+(id("gradient-picker-1") as HTMLInputElement).addEventListener("input", _.debounce(function (event: InputEvent) {
+    const target: HTMLInputElement = event.target as HTMLInputElement;
+    let gradString = `linear-gradient(${(id("gradient-picker-2") as HTMLInputElement).value}, ${target.value})`;
+    id("desktop-bg").style.backgroundImage = gradString;
+    localStorage.setItem("bgValue", gradString);
+}, 500));
+
+(id("gradient-picker-2") as HTMLInputElement).addEventListener("input", _.debounce(function (event: InputEvent) {
+    const target: HTMLInputElement = event.target as HTMLInputElement;
+    let gradString = `linear-gradient(${(id("gradient-picker-1") as HTMLInputElement).value}, ${target.value})`;
+    id("desktop-bg").style.backgroundImage = gradString;
+    localStorage.setItem("bgValue", gradString);
+}, 500));
+
+(id("image-picker") as HTMLInputElement).addEventListener("change", function (event: InputEvent) {
+    const target: HTMLInputElement = event.target as HTMLInputElement;
+    const file = target.files[0];
+    console.log(file);
+    let imgSrc;
+
+    const reader = new FileReader();
+    reader.addEventListener("load", function(event): void {
+        console.log(event.target.result);
+        imgSrc = event.target.result;
+        let imgUrlString = `url("${imgSrc}")`;
+        const img = new Image();
+        img.src = imgSrc as string;
+        const ratio = img.width / 300
+        id("desktop-bg").style.backgroundImage = imgUrlString;
+        (id("bg-preview-thumbnail") as HTMLImageElement).src = imgSrc as string;
+        (id("bg-preview-thumbnail") as HTMLImageElement).height = img.height * ratio;
+        localStorage.setItem("bgValue", imgUrlString);
+    }, false);
+
+    if (file) {
+        console.log(reader.readAsDataURL(file));
+    }
+});
+
+if (bgType === "gradient" || bgType === "image") {
+    id("desktop-bg").style.backgroundImage = bgValue;
+
+    if (bgType === "image") {
+        const img = new Image();
+        img.src = bgValue.split('"')[1];
+        const ratio = 300 / img.width;
+        (id("bg-preview-thumbnail") as HTMLImageElement).src = img.src;
+        (id("bg-preview-thumbnail") as HTMLImageElement).height = img.height * ratio;
+    }
+} else {
+    id("desktop-bg").style.backgroundColor = bgValue;
+}
+
 
 // bookmark functions
 
@@ -41,14 +145,14 @@ id("modal-device-name").addEventListener("input", _.debounce(function (event: In
     for (let i = 0; i < classes("terminal-user-name").length; i++) {
         classes("terminal-device-name")[i].textContent = (event.target as HTMLInputElement).value;
     }
-}));
+}, 500));
 
 id("modal-user-name").addEventListener("input", _.debounce(function (event: InputEvent) {
     localStorage.setItem("username", (event.target as HTMLInputElement).value);
     for (let i = 0; i < classes("terminal-user-name").length; i++) {
         classes("terminal-user-name")[i].textContent = (event.target as HTMLInputElement).value;
     }
-}));
+}, 500));
 
 for (let i = 0; i < classes("terminal-user-name").length; i++) {
     classes("terminal-user-name")[i].textContent = userName;

@@ -48,15 +48,33 @@
                     <fieldset>
                         <legend>window settings</legend>
                         <div>background</div>
-                        <input type="radio" name="modal-background-type" id="solid-color-bg" />
+                        <input type="radio" name="modal-background-type" id="solid-color-bg" class="modal-background-type" />
                         <label for="solid-color-bg">solid color</label> <br />
-                        <input type="radio" name="modal-background-type" id="gradient-bg" />
+                        <input type="radio" name="modal-background-type" id="gradient-bg" class="modal-background-type" />
                         <label for="gradient-bg">gradient</label> <br />
-                        <input type="radio" name="modal-background-type" id="image-bg" />
+                        <input type="radio" name="modal-background-type" id="image-bg" class="modal-background-type" />
                         <label for="image-bg">image</label>
+
+                        <div id="color-pickers">
+                            <div id="solid-color-container" class="picker-container">
+                                <span>select color: </span><input type="color" id="solid-color-picker" />
+                            </div>
+
+                            <div id="gradient-container" class="picker-container">
+                                <div>customize gradient: </div>
+                                <input type="color" id="gradient-picker-1" value="#ffffff" />
+                                <input type="color" id="gradient-picker-2" value="#ffffff" />
+                            </div>
+
+                            <div id="image-container" class="picker-container">
+                                <div>upload image:</div>
+                                <input type="file" id="image-picker" name="image-picker" accept="image/png, image/jpeg" /><br />
+                                <img id="bg-preview-thumbnail" width="300" />
+                            </div>
+                        </div>
                     </fieldset>
                 </div>
-                <input type="button" value="reset all settings" />
+                <input type="button" value="reset all settings" id="reset-settings" />
             </div>
         </div>
         <main id="desktop-container">
