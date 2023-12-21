@@ -256,7 +256,7 @@ body {
             backdrop-filter: blur(10px);
             box-shadow: vars.$shadow-sm;
             padding: 4px;
-            overflow-y: scroll;
+            overflow: hidden;
             scrollbar-width: none;
             color: frappe.$text;
 
