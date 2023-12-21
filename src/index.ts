@@ -36,8 +36,6 @@ id("settings-button").onclick = (event) => {
 const bgType: "solid" | "gradient" | "image" | null = localStorage.getItem("bgType") as "solid" | "gradient" | "image" | null;
 const bgValue = localStorage.getItem("bgValue") ?? "#ffffff";
 
-console.log(bgType);
-
 if (bgType === "image") {
     (id("image-bg") as HTMLInputElement).checked = true;
     id("image-container").style.display = "block";
@@ -58,8 +56,6 @@ for (let i = 0; i < classes("modal-background-type").length; i++) {
         idArr.push("container");
 
         const idName = idArr.join("-");
-
-        console.log(id(idName));
 
         for (let j = 0; j < classes("picker-container").length; j++) {
             (classes("picker-container")[j] as HTMLElement).style.display = "none";
@@ -96,12 +92,10 @@ for (let i = 0; i < classes("modal-background-type").length; i++) {
 (id("image-picker") as HTMLInputElement).addEventListener("change", function (event: InputEvent) {
     const target: HTMLInputElement = event.target as HTMLInputElement;
     const file = target.files[0];
-    console.log(file);
     let imgSrc;
 
     const reader = new FileReader();
     reader.addEventListener("load", function(event): void {
-        console.log(event.target.result);
         imgSrc = event.target.result;
         let imgUrlString = `url("${imgSrc}")`;
         const img = new Image();
@@ -436,7 +430,6 @@ id("modal-user-location").addEventListener("input", _.debounce((event: InputEven
             
             id(RESULT_CONTAINER).style.bottom = `-${id(RESULT_CONTAINER).offsetHeight}px`;
          }).catch(err => {
-            // console.error(err);
             id(RESULT_CONTAINER).style.display = "block";
             id(RESULT_CONTAINER).innerHTML = `
                 <div id="location-search-error">
