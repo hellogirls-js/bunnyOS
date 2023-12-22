@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     </head>
-    <body>
+    <body class="dark">
         <div id="modal-container">
             <div id="modal">
                 <h1>settings</h1>
@@ -47,6 +47,13 @@
                     </fieldset>
                     <fieldset>
                         <legend>window settings</legend>
+                        <div>color mode</div>
+                        <input type="radio" name="color-mode" id="light-mode" class="color-mode" value="light" />
+                        <label for="light-mode">light</label> <br />
+                        <input type="radio" name="color-mode" id="dark-mode" class="color-mode" value="dark" />
+                        <label for="dark-mode">dark</label> <br />
+                        <br />
+
                         <div>background</div>
                         <input type="radio" name="modal-background-type" id="solid-color-bg" class="modal-background-type" />
                         <label for="solid-color-bg">solid color</label> <br />
@@ -62,8 +69,8 @@
 
                             <div id="gradient-container" class="picker-container">
                                 <div>customize gradient: </div>
-                                <input type="color" id="gradient-picker-1" value="#ffffff" />
-                                <input type="color" id="gradient-picker-2" value="#ffffff" />
+                                <input type="color" id="gradient-picker-1" />
+                                <input type="color" id="gradient-picker-2" />
                             </div>
 
                             <div id="image-container" class="picker-container">

@@ -33,8 +33,28 @@ id("settings-button").onclick = (event) => {
     document.getElementById("modal-container").style.display = "flex";
 }
 
+const colorMode: "light" | "dark" | null = localStorage.getItem("colorMode") as "light" | "dark" | null;
+
+if (colorMode === "light") {
+    document.body.className = "light";
+} else {
+    document.body.className = "dark";
+}
+
+for (let i = 0; i < classes("color-mode").length; i++) {
+    classes("color-mode")[i].addEventListener("input", function (event: InputEvent) {
+        const target: HTMLInputElement = event.target as HTMLInputElement;
+        document.body.className = target.value;
+        if (!localStorage.getItem("bgValue")) {
+            id("desktop-bg").style.backgroundColor = target.value === "dark" ? "#50566d" : "#bcc0cd";
+            (id("solid-color-picker") as HTMLInputElement).value = target.value === "dark" ? "#50566d" : "#bcc0cd";
+        } 
+        localStorage.setItem("colorMode", target.value);
+    })
+}
+
 const bgType: "solid" | "gradient" | "image" | null = localStorage.getItem("bgType") as "solid" | "gradient" | "image" | null;
-const bgValue = localStorage.getItem("bgValue") ?? "#ffffff";
+const bgValue = localStorage.getItem("bgValue") ?? colorMode === "light" ? "#bcc0cd" : "#50566d";
 
 if (bgType === "image") {
     (id("image-bg") as HTMLInputElement).checked = true;
@@ -67,10 +87,11 @@ for (let i = 0; i < classes("modal-background-type").length; i++) {
     });
 }
 
-(id("solid-color-picker") as HTMLInputElement).value = bgType === "solid" && bgValue !== null ? bgValue : "#ffffff";
+(id("solid-color-picker") as HTMLInputElement).value = bgType === "solid" && bgValue !== null ? bgValue : colorMode === "light" ? "#bcc0cd" : "#50566d";
 
 (id("solid-color-picker") as HTMLInputElement).addEventListener("input", _.debounce(function (event: InputEvent) {
     const target: HTMLInputElement = event.target as HTMLInputElement;
+    id("desktop-bg").style.backgroundImage = undefined;
     id("desktop-bg").style.backgroundColor = target.value;
     localStorage.setItem("bgValue", target.value);
 }, 500));
@@ -344,7 +365,6 @@ if (localStorage.getItem("locationId") !== null) {
             <pre id="weather-icon">
             </pre>
             <div id="weather-information">
-                <div id="weather-location">${locationInfo.name.toLowerCase()}${locationInfo.region ? `, ${locationInfo.region.toLocaleLowerCase()}` : ""}</div>
                 <div id="weather-temp">${tempUnit === null || tempUnit === "celsius" ? `${temp_c}°C` : `${temp_f}°F`}</div>
                 <div id="weather-desc">${current.condition.text.toLowerCase()}</div>
             </div>
