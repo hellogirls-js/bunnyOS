@@ -192,7 +192,7 @@ body {
             top: 0;
             z-index: 0;
             background-repeat: no-repeat;
-            background-size: cover;
+            background-size: 100vw 100vh;
         }
 
         nav {
@@ -256,7 +256,6 @@ body {
             backdrop-filter: blur(10px);
             box-shadow: vars.$shadow-sm;
             padding: 4px;
-            overflow: hidden;
             scrollbar-width: none;
             color: frappe.$text;
 
@@ -364,6 +363,7 @@ body {
             }
 
             .terminal-header {
+                height: 20px;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -402,7 +402,9 @@ body {
             }
 
             .terminal-body {
+                height: calc(100% - 32px);
                 overflow-y: auto;
+                scrollbar-width: none;
 
                 q {
                     color: frappe.$sapphire;

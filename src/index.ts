@@ -138,14 +138,14 @@ const deviceName = localStorage.getItem("deviceName") || "computer";
 id("modal-device-name").addEventListener("input", _.debounce(function (event: InputEvent) {
     localStorage.setItem("deviceName", (event.target as HTMLInputElement).value);
     for (let i = 0; i < classes("terminal-user-name").length; i++) {
-        classes("terminal-device-name")[i].textContent = (event.target as HTMLInputElement).value;
+        classes("terminal-device-name")[i].textContent = (event.target as HTMLInputElement).value.length > 0 ? (event.target as HTMLInputElement).value : "computer";
     }
 }, 500));
 
 id("modal-user-name").addEventListener("input", _.debounce(function (event: InputEvent) {
     localStorage.setItem("username", (event.target as HTMLInputElement).value);
     for (let i = 0; i < classes("terminal-user-name").length; i++) {
-        classes("terminal-user-name")[i].textContent = (event.target as HTMLInputElement).value;
+        classes("terminal-user-name")[i].textContent = (event.target as HTMLInputElement).value.length > 0 ? (event.target as HTMLInputElement).value : "null";
     }
 }, 500));
 
@@ -250,12 +250,12 @@ function processBookmarkCommand(event: SubmitEvent, value: string) {
     } else {
         switch (splitCommand[1]) {
             case "add":
-                if (splitCommand.length > 4) {
-                    throw "too many elements provided";
-                } else if (/(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})? /.test(splitCommand[3]) === false) {
+                if (/(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})? /.test(splitCommand[splitCommand.length - 1]) === false) {
                     throw "invalid url provided";
                 } else {
-                    createBookmark(splitCommand[2], splitCommand[3]);
+                    const url = splitCommand.pop();
+                    const command = splitCommand.slice(2);
+                    createBookmark(command.join(" "), url);
                 }
                 break;
             case "help":
@@ -276,7 +276,8 @@ function processBookmarkCommand(event: SubmitEvent, value: string) {
                 listBookmarks();
                 break;
             case "delete":
-                deleteBookmark(splitCommand[2]);
+                const name = splitCommand.splice(2);
+                deleteBookmark(name.join(" "));
                 break;
             default:
                 // not a proper command
@@ -297,6 +298,8 @@ function bookmarkCommand(event: SubmitEvent) {
         `
     } finally {
         // create a new textbox
+        const savedUserName = localStorage.getItem("username") || "null";
+        const savedDeviceName = localStorage.getItem("deviceName") || "computer";
         const formEl = id("bookmarks-terminal-body").getElementsByTagName("form")[0];
         let newElement = document.createElement("div");
         newElement.className = "terminal-command-text";
@@ -306,8 +309,8 @@ function bookmarkCommand(event: SubmitEvent) {
         const templateContent = (id("add-bookmark-template") as HTMLTemplateElement).content.cloneNode(true);
         id("bookmarks-terminal-body").appendChild(templateContent);
         for (let i = 0; i < classes("terminal-user-name").length; i++) {
-            classes("terminal-user-name")[i].textContent = userName;
-            classes("terminal-device-name")[i].textContent = deviceName;
+            classes("terminal-user-name")[i].textContent = savedUserName;
+            classes("terminal-device-name")[i].textContent = savedDeviceName;
         }
         id("bookmarks-terminal-body").getElementsByTagName("form")[0].onsubmit = bookmarkCommand;
         (classes("bookmarks-textbox")[0] as HTMLInputElement).focus();
