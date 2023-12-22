@@ -246,14 +246,14 @@ body {
             }
 
             &#clock-window {
-                width: 30%;
+                width: 25%;
                 height: 25%;
                 top: 6vh;
                 right: 10vw;
                 user-select: none;
 
                 @media screen and (max-width: 1280px) {
-                    width: 25%;
+                    width: 30%;
                     right: 2vw;
                 }
 
