@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import _ from "lodash";
 import axios from "axios";
 import aalib from "aalib.js";
+import dotenv from "dotenv";
 
 import "./styles/style.scss";
 import env from "./data/env.json";
@@ -32,10 +33,28 @@ id("settings-button").onclick = (event) => {
     document.getElementById("modal-container").style.display = "flex";
 }
 
-const bgType: "solid" | "gradient" | "image" | null = localStorage.getItem("bgType") as "solid" | "gradient" | "image" | null;
-const bgValue = localStorage.getItem("bgValue") ?? "#ffffff";
+const colorMode: "light" | "dark" | null = localStorage.getItem("colorMode") as "light" | "dark" | null;
 
-console.log(bgType);
+if (colorMode === "light") {
+    document.body.className = "light";
+} else {
+    document.body.className = "dark";
+}
+
+for (let i = 0; i < classes("color-mode").length; i++) {
+    classes("color-mode")[i].addEventListener("input", function (event: InputEvent) {
+        const target: HTMLInputElement = event.target as HTMLInputElement;
+        document.body.className = target.value;
+        if (!localStorage.getItem("bgValue")) {
+            id("desktop-bg").style.backgroundColor = target.value === "dark" ? "#50566d" : "#bcc0cd";
+            (id("solid-color-picker") as HTMLInputElement).value = target.value === "dark" ? "#50566d" : "#bcc0cd";
+        } 
+        localStorage.setItem("colorMode", target.value);
+    })
+}
+
+const bgType: "solid" | "gradient" | "image" | null = localStorage.getItem("bgType") as "solid" | "gradient" | "image" | null;
+const bgValue = localStorage.getItem("bgValue") ?? colorMode === "light" ? "#bcc0cd" : "#50566d";
 
 if (bgType === "image") {
     (id("image-bg") as HTMLInputElement).checked = true;
@@ -58,8 +77,6 @@ for (let i = 0; i < classes("modal-background-type").length; i++) {
 
         const idName = idArr.join("-");
 
-        console.log(id(idName));
-
         for (let j = 0; j < classes("picker-container").length; j++) {
             (classes("picker-container")[j] as HTMLElement).style.display = "none";
         }
@@ -70,10 +87,11 @@ for (let i = 0; i < classes("modal-background-type").length; i++) {
     });
 }
 
-(id("solid-color-picker") as HTMLInputElement).value = bgType === "solid" && bgValue !== null ? bgValue : "#ffffff";
+(id("solid-color-picker") as HTMLInputElement).value = bgType === "solid" && bgValue !== null ? bgValue : colorMode === "light" ? "#bcc0cd" : "#50566d";
 
 (id("solid-color-picker") as HTMLInputElement).addEventListener("input", _.debounce(function (event: InputEvent) {
     const target: HTMLInputElement = event.target as HTMLInputElement;
+    id("desktop-bg").style.backgroundImage = undefined;
     id("desktop-bg").style.backgroundColor = target.value;
     localStorage.setItem("bgValue", target.value);
 }, 500));
@@ -95,12 +113,10 @@ for (let i = 0; i < classes("modal-background-type").length; i++) {
 (id("image-picker") as HTMLInputElement).addEventListener("change", function (event: InputEvent) {
     const target: HTMLInputElement = event.target as HTMLInputElement;
     const file = target.files[0];
-    console.log(file);
     let imgSrc;
 
     const reader = new FileReader();
     reader.addEventListener("load", function(event): void {
-        console.log(event.target.result);
         imgSrc = event.target.result;
         let imgUrlString = `url("${imgSrc}")`;
         const img = new Image();
@@ -143,14 +159,14 @@ const deviceName = localStorage.getItem("deviceName") || "computer";
 id("modal-device-name").addEventListener("input", _.debounce(function (event: InputEvent) {
     localStorage.setItem("deviceName", (event.target as HTMLInputElement).value);
     for (let i = 0; i < classes("terminal-user-name").length; i++) {
-        classes("terminal-device-name")[i].textContent = (event.target as HTMLInputElement).value;
+        classes("terminal-device-name")[i].textContent = (event.target as HTMLInputElement).value.length > 0 ? (event.target as HTMLInputElement).value : "computer";
     }
 }, 500));
 
 id("modal-user-name").addEventListener("input", _.debounce(function (event: InputEvent) {
     localStorage.setItem("username", (event.target as HTMLInputElement).value);
     for (let i = 0; i < classes("terminal-user-name").length; i++) {
-        classes("terminal-user-name")[i].textContent = (event.target as HTMLInputElement).value;
+        classes("terminal-user-name")[i].textContent = (event.target as HTMLInputElement).value.length > 0 ? (event.target as HTMLInputElement).value : "null";
     }
 }, 500));
 
@@ -255,12 +271,12 @@ function processBookmarkCommand(event: SubmitEvent, value: string) {
     } else {
         switch (splitCommand[1]) {
             case "add":
-                if (splitCommand.length > 4) {
-                    throw "too many elements provided";
-                } else if (/(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})? /.test(splitCommand[3]) === false) {
+                if (/(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})? /.test(splitCommand[splitCommand.length - 1]) === false) {
                     throw "invalid url provided";
                 } else {
-                    createBookmark(splitCommand[2], splitCommand[3]);
+                    const url = splitCommand.pop();
+                    const command = splitCommand.slice(2);
+                    createBookmark(command.join(" "), url);
                 }
                 break;
             case "help":
@@ -281,7 +297,8 @@ function processBookmarkCommand(event: SubmitEvent, value: string) {
                 listBookmarks();
                 break;
             case "delete":
-                deleteBookmark(splitCommand[2]);
+                const name = splitCommand.splice(2);
+                deleteBookmark(name.join(" "));
                 break;
             default:
                 // not a proper command
@@ -302,6 +319,8 @@ function bookmarkCommand(event: SubmitEvent) {
         `
     } finally {
         // create a new textbox
+        const savedUserName = localStorage.getItem("username") || "null";
+        const savedDeviceName = localStorage.getItem("deviceName") || "computer";
         const formEl = id("bookmarks-terminal-body").getElementsByTagName("form")[0];
         let newElement = document.createElement("div");
         newElement.className = "terminal-command-text";
@@ -311,8 +330,8 @@ function bookmarkCommand(event: SubmitEvent) {
         const templateContent = (id("add-bookmark-template") as HTMLTemplateElement).content.cloneNode(true);
         id("bookmarks-terminal-body").appendChild(templateContent);
         for (let i = 0; i < classes("terminal-user-name").length; i++) {
-            classes("terminal-user-name")[i].textContent = userName;
-            classes("terminal-device-name")[i].textContent = deviceName;
+            classes("terminal-user-name")[i].textContent = savedUserName;
+            classes("terminal-device-name")[i].textContent = savedDeviceName;
         }
         id("bookmarks-terminal-body").getElementsByTagName("form")[0].onsubmit = bookmarkCommand;
         (classes("bookmarks-textbox")[0] as HTMLInputElement).focus();
@@ -326,12 +345,12 @@ function bookmarkCommand(event: SubmitEvent) {
 let temp_c: number; let temp_f: number; let locationInfo: LocationObject;
 
 if (localStorage.getItem("locationId") !== null) {
-    axios.get(`${env.WEATHER_API_URL}search.json?key=${env.WEATHER_API_KEY}&q=${localStorage.getItem("locationId")}`).then(res => res.data).then(locations => {
+    axios.get(`${process.env.WEATHER_API_URL}search.json?key=${process.env.WEATHER_API_KEY}&q=${localStorage.getItem("locationId")}`).then(res => res.data).then(locations => {
         (id("modal-user-location") as HTMLInputElement).value = (locations as LocationObject[])[0].name.toLocaleLowerCase(); 
         locationInfo = (locations as LocationObject[])[0];
     }).catch(err => console.error(err));
 
-    axios.get(`${env.WEATHER_API_URL}current.json?key=${env.WEATHER_API_KEY}&q=${localStorage.getItem("locationId")}`).then(res => res.data).then(data => {
+    axios.get(`${process.env.WEATHER_API_URL}current.json?key=${process.env.WEATHER_API_KEY}&q=${localStorage.getItem("locationId")}`).then(res => res.data).then(data => {
         const { current } = data;
         const tempUnit = localStorage.getItem("temperatureUnit");
 
@@ -346,7 +365,6 @@ if (localStorage.getItem("locationId") !== null) {
             <pre id="weather-icon">
             </pre>
             <div id="weather-information">
-                <div id="weather-location">${locationInfo.name.toLowerCase()}${locationInfo.region ? `, ${locationInfo.region.toLocaleLowerCase()}` : ""}</div>
                 <div id="weather-temp">${tempUnit === null || tempUnit === "celsius" ? `${temp_c}°C` : `${temp_f}°F`}</div>
                 <div id="weather-desc">${current.condition.text.toLowerCase()}</div>
             </div>
@@ -395,7 +413,7 @@ function selectLocation(event: MouseEvent) {
         target = target.parentElement;
     }
     localStorage.setItem("locationId", target.dataset.locationId);
-    axios.get(`${env.WEATHER_API_URL}search.json?key=${env.WEATHER_API_KEY}&q=${target.dataset.locationId}`).then(res => res.data).then(locations => {
+    axios.get(`${process.env.WEATHER_API_URL}search.json?key=${process.env.WEATHER_API_KEY}&q=${target.dataset.locationId}`).then(res => res.data).then(locations => {
         (id("modal-user-location") as HTMLInputElement).value = (locations as LocationObject[])[0].name.toLocaleLowerCase(); 
     }).catch(err => console.error(err));
     
@@ -408,7 +426,7 @@ id("modal-user-location").addEventListener("input", _.debounce((event: InputEven
     if (input.value.length === 0) {
         id(RESULT_CONTAINER).style.display = "none";
     } else {
-        axios.get(`${env.WEATHER_API_URL}search.json?key=${env.WEATHER_API_KEY}&q=${input.value}`)
+        axios.get(`${process.env.WEATHER_API_URL}search.json?key=${process.env.WEATHER_API_KEY}&q=${input.value}`)
          .then(res => {
             if (res.status !== 200 && res.status !== 201) {
                 throw  `could not fetch locations (status code: ${res.status})`;
@@ -435,7 +453,6 @@ id("modal-user-location").addEventListener("input", _.debounce((event: InputEven
             
             id(RESULT_CONTAINER).style.bottom = `-${id(RESULT_CONTAINER).offsetHeight}px`;
          }).catch(err => {
-            // console.error(err);
             id(RESULT_CONTAINER).style.display = "block";
             id(RESULT_CONTAINER).innerHTML = `
                 <div id="location-search-error">

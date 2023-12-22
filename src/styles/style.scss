@@ -1,4 +1,5 @@
 @use "partials/frappe";
+@use "partials/latte";
 @use "partials/normalize";
 @use "partials/vars";
 @use "sass:color";
@@ -11,12 +12,6 @@ $nav-margin: 2px;
 * {
     box-sizing: border-box;
     font-family: "Ubuntu Mono", monospace;
-    color: frappe.$text;
-    accent-color: frappe.$lavender;
-    &::selection {
-        background-color: color.change(frappe.$crust, $alpha: 0.6);
-        color: inherit;
-    }
 }
 
 body {
@@ -24,14 +19,8 @@ body {
     height: 100vh;
 
     input[type=text] {
-        background: frappe.$crust;
-        border: vars.$border-textbox;
         border-radius: vars.$radius-sm;
         padding: 4px 10px;
-
-        &:focus {
-            outline: frappe.$lavender;
-        }
     }
 
     #modal-container {
@@ -44,22 +33,25 @@ body {
         z-index: 999;
         width: 100vw;
         height: 100vh;
-        background-color: color.change(frappe.$crust, $alpha: 0.8);
         backdrop-filter: blur(5px);
 
         #modal {
             width: 75vw;
             height: 75vh;
             z-index: 1000;
-            background-image: linear-gradient(frappe.$base, frappe.$mantle);
             border-radius: vars.$radius-lg;
-            box-shadow: vars.$shadow-md;
             padding: 10px;
             font-size: 1.3rem;
 
-            input[type=submit], input[type=button] {
-                background: frappe.$surface0;
-                border: 1px solid frappe.$subtext0;
+            input[type=file] {
+                margin-top: 10px;
+
+                &::file-selector-button {
+                    font-family: "Ubuntu Mono", monospace;
+                }
+            }
+
+            input[type=submit], input[type=button], input::file-selector-button {
                 border-radius: vars.$radius-sm;
                 padding: 5px;
             }
@@ -85,7 +77,6 @@ body {
                     flex-grow: 1;
                     border-radius: vars.$radius-sm;
                     padding: 20px;
-                    border: 1px solid frappe.$surface1;
 
                     legend {
                         font-size: 1.5rem;
@@ -127,10 +118,8 @@ body {
                             align-items: center;
                             gap: 10px;
                             flex-basis: 80%;
-                            border: vars.$border-textbox;
                             border-radius: vars.$radius-sm;
                             padding: 4px 10px;
-                            background: frappe.$crust;
 
                             input[type=text] {
                                 flex-grow: 1;
@@ -144,26 +133,18 @@ body {
                                 bottom: -51px;
                                 left: 0;
                                 width: 100%;
-                                background: frappe.$surface0;
-                                border: 1px solid frappe.$text;
                                 border-radius: vars.$radius-sm;
-                                box-shadow: vars.$shadow-sm;
 
                                 .location-result {
                                     margin: 10px 0px;
                                     padding: 4px;
                                     cursor: pointer;
 
-                                    &:hover {
-                                        background-color: frappe.$base;
-                                    }
-
                                     .location-name {
                                         font-weight: bold;
                                     }
 
                                     .location-info {
-                                        color: frappe.$subtext0;
                                         font-size: 0.9rem;
                                     }
                                 }
@@ -172,7 +153,6 @@ body {
 
                         input[type=text] {
                             flex-basis: 80%;
-                            caret-color: frappe.$rosewater;
                         }
                     }
                 }
@@ -192,7 +172,7 @@ body {
             top: 0;
             z-index: 0;
             background-repeat: no-repeat;
-            background-size: cover;
+            background-size: 100vw 100vh;
         }
 
         nav {
@@ -203,12 +183,10 @@ body {
             justify-content: space-around;
             margin: auto;
             z-index: 10;
-            background-image: linear-gradient(color.change(frappe.$base, $alpha: 0.95), color.change(frappe.$mantle, $alpha: 0.95));
             backdrop-filter: blur(10px);
             width: 80vw;
             height: $nav-height;
             border-radius: vars.$radius-lg;
-            box-shadow: vars.$shadow-md;
             font-family: "Ubuntu Mono", monospace;
 
             @media screen and (max-width: 1280px) {
@@ -220,7 +198,6 @@ body {
                 padding: 0;
                 border: none;
                 outline: none;
-                color: frappe.$text;
 
                 &#weather-button {
                     position: absolute;
@@ -251,14 +228,10 @@ body {
             position: absolute;
             z-index: 5;
             font-family: "Space Mono", monospace;
-            background-image: linear-gradient(color.change(frappe.$base, $alpha: 0.9), color.change(frappe.$mantle, $alpha: 0.9));
             border-radius: vars.$radius-lg;
             backdrop-filter: blur(10px);
-            box-shadow: vars.$shadow-sm;
             padding: 4px;
-            overflow-y: scroll;
             scrollbar-width: none;
-            color: frappe.$text;
 
             &#bookmarks-window {
                 width: 35%;
@@ -270,21 +243,17 @@ body {
                     width: 45%;
                     left: 2vw;
                 }
-
-                .no-bookmarks {
-                    color: frappe.$subtext0;
-                }
             }
 
             &#clock-window {
-                width: 20%;
+                width: 25%;
                 height: 25%;
                 top: 6vh;
                 right: 10vw;
                 user-select: none;
 
                 @media screen and (max-width: 1280px) {
-                    width: 25%;
+                    width: 30%;
                     right: 2vw;
                 }
 
@@ -318,7 +287,6 @@ body {
 
                         #google-search-prefix {
                             font-weight: bold;
-                            color: frappe.$rosewater;
                         }
 
                         input[type=text] {
@@ -326,8 +294,6 @@ body {
                             background-color: transparent;
                             border: none;
                             outline: none;
-                            color: frappe.$text;
-                            caret-color: frappe.$rosewater;
                             caret-shape: bar;
                             padding: 0;
                         }
@@ -364,16 +330,13 @@ body {
             }
 
             .terminal-header {
+                height: 20px;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 gap: 5px;
                 padding: 4px 4px 8px 4px;
                 user-select: none;
-
-                .terminal-header-title {
-                    color: frappe.$overlay1;
-                }
                 
                 .terminal-header-buttons {
                     display: flex;
@@ -383,54 +346,17 @@ body {
                         width: 14px;
                         height: 14px;
                         border-radius: 50%;
-                        
-                        &.green {
-                            background-color: frappe.$green;
-                        }
-
-                        &.yellow {
-                            background-color: frappe.$yellow;
-                        }
-
-                        &.red {
-                            background-color: frappe.$red;
-                        }
                     }
                 }
-
-                
             }
 
             .terminal-body {
+                height: calc(100% - 32px);
                 overflow-y: auto;
-
-                q {
-                    color: frappe.$sapphire;
-                }
-
-                .terminal-note {
-                    color: frappe.$yellow;
-                }
+                scrollbar-width: none;
 
                 .terminal-output {
-
                     margin-bottom: 8px;
-
-                    &.error {
-                        color: frappe.$red;
-
-                        strong {
-                            color: frappe.$red;
-                        }
-                    }
-
-                    &.success {
-                        color: frappe.$green;
-                        
-                        strong {
-                            color: frappe.$green;
-                        }
-                    }
                 }
 
                 .terminal-command-body {
@@ -443,17 +369,11 @@ body {
                         display: flex;
                         align-items: baseline;
 
-                    .terminal-name {
-                            color: frappe.$green;
+                        .terminal-name {
                             font-weight: 700;
-
-                            .terminal-user-name, .terminal-device-name {
-                                color: frappe.$green;
-                            }
                         }
                         
                         .terminal-directory {
-                            color: frappe.$blue;
                             font-weight: 700;
                         } 
                     }
@@ -466,8 +386,6 @@ body {
                             background-color: transparent;
                             border: none;
                             outline: none;
-                            color: frappe.$text;
-                            caret-color: frappe.$rosewater;
                             caret-shape: bar;
                             padding: 0;
                         }
@@ -476,5 +394,371 @@ body {
             }
         }  
     } 
+
+    &.dark {
+        color: frappe.$text;
+        accent-color: frappe.$lavender;
+        &::selection {
+            background-color: color.change(frappe.$crust, $alpha: 0.6);
+            color: inherit;
+        }
+
+        a:link, a:visited {
+            color: frappe.$text;
+        }
+
+        input[type=text] {
+            color: frappe.$text;
+            background: frappe.$crust;
+            border: vars.$border-dark-textbox;
+    
+            &:focus {
+                outline: frappe.$lavender;
+            }
+        }
+
+        #modal-container {
+            background-color: color.change(frappe.$crust, $alpha: 0.8);
+
+            #modal {
+                background-image: linear-gradient(frappe.$base, frappe.$mantle);
+                box-shadow: vars.$shadow-dark-md;
+
+                input[type=submit], input[type=button], input::file-selector-button {
+                    color: frappe.$text;
+                    background: frappe.$surface0;
+                    border: 1px solid frappe.$subtext0;
+                }
+
+                #modal-body {
+                    border: 1px solid frappe.$surface1;
+
+                    fieldset {
+                        .textfield {
+                            .icon-textbox {
+                                border: vars.$border-dark-textbox;
+                                background: frappe.$crust;
+
+                                #location-search-results {
+                                    background: frappe.$surface0;
+                                    border: 1px solid frappe.$text;
+                                    box-shadow: vars.$shadow-dark-sm;
+    
+                                    .location-result {
+    
+                                        &:hover {
+                                            background-color: frappe.$base;
+                                        }
+
+                                        .location-info {
+                                            color: frappe.$subtext0;
+                                        }
+                                    }
+                                }
+                            }
+
+                            input[type=text] {
+                                caret-color: frappe.$rosewater;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        #desktop-container {
+            nav {
+                background-image: linear-gradient(color.change(frappe.$base, $alpha: 0.9), color.change(frappe.$mantle, $alpha: 0.9));
+                box-shadow: vars.$shadow-dark-sm;
+                color: frappe.$text;
+
+                button {
+                    color: frappe.$text;
+                }
+            }
+
+            .terminal-window {
+                background-image: linear-gradient(color.change(frappe.$base, $alpha: 0.9), color.change(frappe.$mantle, $alpha: 0.9));
+                box-shadow: vars.$shadow-dark-sm;
+                color: frappe.$text;
+
+                &#bookmarks-window {
+                    .no-bookmarks {
+                        color: frappe.$subtext0;
+                    }
+                }
+
+                &#google-window {
+                    #google-terminal-body {
+                        #google-search-command-container {
+                            #google-search-prefix {
+                                color: frappe.$rosewater;
+                            }
+    
+                            input[type=text] {
+                                color: frappe.$text;
+                                caret-color: frappe.$rosewater;
+                            }
+                        }  
+                    }
+                }
+
+                .terminal-header {
+                    .terminal-header-title {
+                        color: frappe.$overlay1;
+                    }
+                    
+                    .terminal-header-buttons {
+                        .terminal-header-button {
+                            
+                            &.green {
+                                background-color: frappe.$green;
+                            }
+    
+                            &.yellow {
+                                background-color: frappe.$yellow;
+                            }
+    
+                            &.red {
+                                background-color: frappe.$red;
+                            }
+                        }
+                    }
+                }
+
+                .terminal-body {
+                    q {
+                        color: frappe.$sapphire;
+                    }
+    
+                    .terminal-note {
+                        color: frappe.$yellow;
+                    }
+    
+                    .terminal-output {
+                        &.error {
+                            color: frappe.$red;
+                            strong {
+                                color: frappe.$red;
+                            }
+                        }
+    
+                        &.success {
+                            color: frappe.$green;
+                            strong {
+                                color: frappe.$green;
+                            }
+                        }
+                    }
+
+                    .terminal-command-body {
+                        .terminal-command-info {
+                            .terminal-name {
+                                color: frappe.$green;
+    
+                                .terminal-user-name, .terminal-device-name {
+                                    color: frappe.$green;
+                                }
+                            }
+                            
+                            .terminal-directory {
+                                color: frappe.$blue;
+                            } 
+                        }
+    
+                        .terminal-command-text {
+                            input[type=text] {
+                                color: frappe.$text;
+                                caret-color: frappe.$rosewater;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &.light {
+        color: latte.$text;
+        accent-color: latte.$lavender;
+        &::selection {
+            background-color: color.change(latte.$crust, $alpha: 0.6);
+            color: inherit;
+        }
+
+        a:link, a:visited {
+            color: latte.$text;
+        }
+
+        input[type=text] {
+            color: latte.$text;
+            background: latte.$crust;
+            border: vars.$border-light-textbox;
+    
+            &:focus {
+                outline: latte.$lavender;
+            }
+        }
+
+        #modal-container {
+            background-color: color.change(latte.$crust, $alpha: 0.8);
+
+            #modal {
+                background-image: linear-gradient(latte.$base, latte.$mantle);
+                box-shadow: vars.$shadow-light-md;
+
+                input[type=submit], input[type=button], input::file-selector-button {
+                    color: latte.$text;
+                    background: latte.$surface0;
+                    border: 1px solid latte.$subtext0;
+                }
+
+                #modal-body {
+                    border: 1px solid latte.$surface1;
+
+                    fieldset {
+                        .textfield {
+                            .icon-textbox {
+                                border: vars.$border-light-textbox;
+                                background: latte.$crust;
+
+                                #location-search-results {
+                                    background: latte.$surface0;
+                                    border: 1px solid latte.$text;
+                                    box-shadow: vars.$shadow-light-sm;
+    
+                                    .location-result {
+    
+                                        &:hover {
+                                            background-color: latte.$base;
+                                        }
+
+                                        .location-info {
+                                            color: latte.$subtext0;
+                                        }
+                                    }
+                                }
+                            }
+
+                            input[type=text] {
+                                caret-color: latte.$rosewater;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        #desktop-container {
+            nav {
+                background-image: linear-gradient(color.change(latte.$base, $alpha: 0.9), color.change(latte.$mantle, $alpha: 0.9));
+                box-shadow: vars.$shadow-light-sm;
+                color: latte.$text;
+
+                button {
+                    color: latte.$text;
+                }
+            }
+
+            .terminal-window {
+                background-image: linear-gradient(color.change(latte.$base, $alpha: 0.85), color.change(latte.$mantle, $alpha: 0.85));
+                box-shadow: vars.$shadow-light-sm;
+                color: latte.$text;
+
+                &#bookmarks-window {
+                    .no-bookmarks {
+                        color: latte.$subtext0;
+                    }
+                }
+
+                &#google-window {
+                    #google-terminal-body {
+                        #google-search-command-container {
+                            #google-search-prefix {
+                                color: latte.$rosewater;
+                            }
+    
+                            input[type=text] {
+                                color: latte.$text;
+                                caret-color: latte.$rosewater;
+                            }
+                        }  
+                    }
+                }
+
+                .terminal-header {
+                    .terminal-header-title {
+                        color: latte.$overlay1;
+                    }
+                    
+                    .terminal-header-buttons {
+                        .terminal-header-button {
+                            
+                            &.green {
+                                background-color: latte.$green;
+                            }
+    
+                            &.yellow {
+                                background-color: latte.$yellow;
+                            }
+    
+                            &.red {
+                                background-color: latte.$red;
+                            }
+                        }
+                    }
+                }
+
+                .terminal-body {
+                    q {
+                        color: latte.$sapphire;
+                    }
+    
+                    .terminal-note {
+                        color: latte.$yellow;
+                    }
+    
+                    .terminal-output {
+                        &.error {
+                            color: latte.$red;
+                            strong {
+                                color: latte.$red;
+                            }
+                        }
+    
+                        &.success {
+                            color: latte.$green;
+                            strong {
+                                color: latte.$green;
+                            }
+                        }
+                    }
+
+                    .terminal-command-body {
+                        .terminal-command-info {
+                            .terminal-name {
+                                color: latte.$green;
+    
+                                .terminal-user-name, .terminal-device-name {
+                                    color: latte.$green;
+                                }
+                            }
+                            
+                            .terminal-directory {
+                                color: latte.$blue;
+                            } 
+                        }
+    
+                        .terminal-command-text {
+                            input[type=text] {
+                                color: latte.$text;
+                                caret-color: latte.$rosewater;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
