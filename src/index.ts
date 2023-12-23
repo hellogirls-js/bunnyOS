@@ -21,6 +21,7 @@ function classes(className: string): HTMLCollectionOf<Element> {
 
 id("reset-settings").onclick = (event) => {
     localStorage.clear();
+    location.reload();
 }
 
 id("modal-container").onclick = (event) => {
@@ -37,8 +38,10 @@ const colorMode: "light" | "dark" | null = localStorage.getItem("colorMode") as 
 
 if (colorMode === "light") {
     document.body.className = "light";
+    (id("light-mode") as HTMLInputElement).checked = true;
 } else {
     document.body.className = "dark";
+    (id("dark-mode") as HTMLInputElement).checked = true;
 }
 
 for (let i = 0; i < classes("color-mode").length; i++) {
@@ -48,13 +51,16 @@ for (let i = 0; i < classes("color-mode").length; i++) {
         if (!localStorage.getItem("bgValue")) {
             id("desktop-bg").style.backgroundColor = target.value === "dark" ? "#50566d" : "#bcc0cd";
             (id("solid-color-picker") as HTMLInputElement).value = target.value === "dark" ? "#50566d" : "#bcc0cd";
+            id("weather-icon").style.color = target.value ==="light" ? "hsl(234, 16%, 35%)" : "hsl(227, 70%, 87%)"
         } 
         localStorage.setItem("colorMode", target.value);
     })
 }
 
+console.log(localStorage.getItem("bgValue"));
+
 const bgType: "solid" | "gradient" | "image" | null = localStorage.getItem("bgType") as "solid" | "gradient" | "image" | null;
-const bgValue = localStorage.getItem("bgValue") ?? colorMode === "light" ? "#bcc0cd" : "#50566d";
+const bgValue =  bgType ? localStorage.getItem("bgValue") : colorMode === "light" ? "#bcc0cd" : "#50566d";
 
 if (bgType === "image") {
     (id("image-bg") as HTMLInputElement).checked = true;
@@ -344,6 +350,39 @@ function bookmarkCommand(event: SubmitEvent) {
 
 let temp_c: number; let temp_f: number; let locationInfo: LocationObject;
 
+console.log("cel", temp_c, "f", temp_f);
+
+function addWeatherInfo(data: any) {
+    const { current } = data;
+    const tempUnit = localStorage.getItem("temperatureUnit");
+    id("weather-button").getElementsByTagName("i")[0].classList.replace("ti-temperature-off", tempUnit === null || tempUnit === "celsius" ? "ti-temperature-celsius" : "ti-temperature-fahrenheit");
+    id("weather-button-temp").innerHTML = tempUnit === null || tempUnit === "celsius" ? current.temp_c : current.temp_f;
+    temp_c = current.temp_c;
+    temp_f = current.temp_f;
+
+    // put weather data in the terminal window
+    id("weather-content").innerHTML = `
+        <pre id="weather-icon">
+        </pre>
+        <div id="weather-information">
+            <div id="weather-temp">${tempUnit === null || tempUnit === "celsius" ? `${temp_c}°C` : `${temp_f}°F`}</div>
+            <div id="weather-desc">${current.condition.text.toLowerCase()}</div>
+        </div>
+    `;
+
+    aalib.read.image.fromURL(current.condition.icon)
+        .map(aalib.aa({
+            width: 35,
+            height: 15,
+            colored: false
+        }))
+        .map(aalib.render.html({
+            el: id("weather-icon"),
+            background: "transparent",
+            color: document.body.className === "light" ? "hsl(234, 16%, 35%)" : "hsl(227, 70%, 87%)"
+        })).subscribe();
+}
+
 if (localStorage.getItem("locationId") !== null) {
     axios.get(`${process.env.WEATHER_API_URL}search.json?key=${process.env.WEATHER_API_KEY}&q=${localStorage.getItem("locationId")}`).then(res => res.data).then(locations => {
         (id("modal-user-location") as HTMLInputElement).value = (locations as LocationObject[])[0].name.toLocaleLowerCase(); 
@@ -351,37 +390,7 @@ if (localStorage.getItem("locationId") !== null) {
     }).catch(err => console.error(err));
 
     axios.get(`${process.env.WEATHER_API_URL}current.json?key=${process.env.WEATHER_API_KEY}&q=${localStorage.getItem("locationId")}`).then(res => res.data).then(data => {
-        const { current } = data;
-        const tempUnit = localStorage.getItem("temperatureUnit");
-
-        // put weather data in the navbar
-        id("weather-button").getElementsByTagName("i")[0].classList.replace("ti-temperature-off", tempUnit === null || tempUnit === "celsius" ? "ti-temperature-celsius" : "ti-temperature-fahrenheit");
-        id("weather-button-temp").innerHTML = tempUnit === null || tempUnit === "celsius" ? current.temp_c : current.temp_f;
-        temp_c = current.temp_c;
-        temp_f = current.temp_f;
-
-        // put weather data in the terminal window
-        id("weather-content").innerHTML = `
-            <pre id="weather-icon">
-            </pre>
-            <div id="weather-information">
-                <div id="weather-temp">${tempUnit === null || tempUnit === "celsius" ? `${temp_c}°C` : `${temp_f}°F`}</div>
-                <div id="weather-desc">${current.condition.text.toLowerCase()}</div>
-            </div>
-        `;
-
-        aalib.read.image.fromURL(current.condition.icon)
-            .map(aalib.aa({
-                width: 35,
-                height: 15,
-                colored: false
-            }))
-            .map(aalib.render.html({
-                el: id("weather-icon"),
-                background: "transparent",
-                color: "hsl(227, 70%, 87%)"
-            })).subscribe();
-
+        addWeatherInfo(data);
     }).catch(err => console.error(err))
 }
 
@@ -400,7 +409,9 @@ function setTempUnit(event: InputEvent) {
     localStorage.setItem("temperatureUnit", target.value);
     id("weather-button").getElementsByTagName("i")[0].classList.replace(target.value === "fahrenheit" ? "ti-temperature-celsius" : "ti-temperature-fahrenheit", target.value === "celsius" ? "ti-temperature-celsius" : "ti-temperature-fahrenheit");
     id("weather-button-temp").innerHTML = localStorage.getItem("temperatureUnit") === null || localStorage.getItem("temperatureUnit") === "celsius" ? `${temp_c}` : `${temp_f}`;
-    id("weather-temp").textContent = localStorage.getItem("temperatureUnit") === null || localStorage.getItem("temperatureUnit") === "celsius" ? `${temp_c}°C` : `${temp_f}°F`;
+    if (temp_c && temp_f) {
+        id("weather-temp").textContent = localStorage.getItem("temperatureUnit") === null || localStorage.getItem("temperatureUnit") === "celsius" ? `${temp_c}°C` : `${temp_f}°F`;
+    }
 }
 
 id("radio-f").oninput = setTempUnit;
@@ -415,6 +426,10 @@ function selectLocation(event: MouseEvent) {
     localStorage.setItem("locationId", target.dataset.locationId);
     axios.get(`${process.env.WEATHER_API_URL}search.json?key=${process.env.WEATHER_API_KEY}&q=${target.dataset.locationId}`).then(res => res.data).then(locations => {
         (id("modal-user-location") as HTMLInputElement).value = (locations as LocationObject[])[0].name.toLocaleLowerCase(); 
+
+        axios.get(`${process.env.WEATHER_API_URL}current.json?key=${process.env.WEATHER_API_KEY}&q=${target.dataset.locationId}`).then(res => res.data).then(data => {
+            addWeatherInfo(data);
+        })
     }).catch(err => console.error(err));
     
     id(RESULT_CONTAINER).style.display = "none";
@@ -481,9 +496,27 @@ setInterval(() => {
 }, 1000);
 
 const terminalWindows = classes("terminal-window") as HTMLCollectionOf<HTMLElement>;
+const terminalCoordsString = localStorage.getItem("terminalCoords");
+const coordArray: TermCoord[] = [];
 
 for (let i = 0; i < terminalWindows.length; i++) {
     dragElement(terminalWindows[i]);
+    if (terminalCoordsString) {
+        const terminalCoords = JSON.parse(terminalCoordsString);
+        terminalWindows[i].style.top = terminalCoords[i].top;
+        terminalWindows[i].style.left = terminalCoords[i].left;
+        coordArray.push({
+            name: terminalWindows[i].id,
+            top: terminalCoords[i].top,
+            left: terminalCoords[i].left,
+        })
+    } else {
+        coordArray.push({
+            name: terminalWindows[i].id,
+            top: "0px",
+            left: "0px"
+        });
+    }
 }
 
 function dragElement(el: HTMLElement) {
@@ -519,6 +552,11 @@ function dragElement(el: HTMLElement) {
         // the conditional is to prevent the terminal window from going out of bounds
         el.style.top = (el.offsetTop - pos2 <= 0 ? 0 : el.offsetTop - pos2 >= innerHeight ? innerHeight : el.offsetTop - pos2) + "px";
         el.style.left = (el.offsetLeft - pos1 <= 0 ? 0 : el.offsetLeft - pos1 >= innerWidth ? innerWidth : el.offsetLeft - pos1) + "px";
+        
+        const elIndex = coordArray.findIndex(obj => obj.name === el.id);
+        coordArray[elIndex].top = el.style.top;
+        coordArray[elIndex].left = el.style.left;
+        localStorage.setItem("terminalCoords", JSON.stringify(coordArray));
     }
 
     function closeDragElement() {

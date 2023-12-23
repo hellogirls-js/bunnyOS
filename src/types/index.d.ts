@@ -3,6 +3,12 @@ interface Bookmark {
     url: string;
 }
 
+interface TermCoord {
+    name: string;
+    top: string;
+    left: string;
+}
+
 interface LocationObject {
     country: string;
     id: number;
