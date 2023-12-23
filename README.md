@@ -1,7 +1,17 @@
-# browser extension in the making!
+# <center>bunnyOS</center>
 
-i'm not sure what i wanna name this, so any name suggestions are welcome!
+![bunnyOS logo](https://assets.hellogirls.info/misc/favicon.png)
+
 
 this is a new tab page that is inspired by [r/unixporn](https://www.reddit.com/r/unixporn/) and pc rices in general. 
 
-includes features such as weather tracking, a live clock, saving urls as bookmarks, and google searching.
+in the process of refactoring it to make into a browser extension, so stay tuned!
+
+### feature list
+- bookmark list
+- real-time clock
+- weather tracking
+- google searching
+
+### examples
+![bunnyos examples](https://assets.hellogirls.info/misc/new+tab.png)
