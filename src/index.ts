@@ -37,11 +37,11 @@ id("settings-button").onclick = (event) => {
 const colorMode: "light" | "dark" | null = localStorage.getItem("colorMode") as "light" | "dark" | null;
 
 if (colorMode === "light") {
-    document.body.className = "light";
     (id("light-mode") as HTMLInputElement).checked = true;
+    document.body.className = "light";
 } else {
-    document.body.className = "dark";
     (id("dark-mode") as HTMLInputElement).checked = true;
+    document.body.className = "dark";
 }
 
 for (let i = 0; i < classes("color-mode").length; i++) {
@@ -51,13 +51,11 @@ for (let i = 0; i < classes("color-mode").length; i++) {
         if (!localStorage.getItem("bgValue")) {
             id("desktop-bg").style.backgroundColor = target.value === "dark" ? "#50566d" : "#bcc0cd";
             (id("solid-color-picker") as HTMLInputElement).value = target.value === "dark" ? "#50566d" : "#bcc0cd";
-            id("weather-icon").style.color = target.value ==="light" ? "hsl(234, 16%, 35%)" : "hsl(227, 70%, 87%)"
+            if (id("weather-icon")) id("weather-icon").style.color = target.value ==="light" ? "hsl(234, 16%, 35%)" : "hsl(227, 70%, 87%)"
         } 
         localStorage.setItem("colorMode", target.value);
     })
 }
-
-console.log(localStorage.getItem("bgValue"));
 
 const bgType: "solid" | "gradient" | "image" | null = localStorage.getItem("bgType") as "solid" | "gradient" | "image" | null;
 const bgValue =  bgType ? localStorage.getItem("bgValue") : colorMode === "light" ? "#bcc0cd" : "#50566d";
@@ -135,7 +133,7 @@ for (let i = 0; i < classes("modal-background-type").length; i++) {
     }, false);
 
     if (file) {
-        console.log(reader.readAsDataURL(file));
+        console.info(reader.readAsDataURL(file));
     }
 });
 
@@ -349,8 +347,6 @@ function bookmarkCommand(event: SubmitEvent) {
 // weather functions
 
 let temp_c: number; let temp_f: number; let locationInfo: LocationObject;
-
-console.log("cel", temp_c, "f", temp_f);
 
 function addWeatherInfo(data: any) {
     const { current } = data;
