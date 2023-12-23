@@ -1,6 +1,6 @@
-# <center>bunnyOS</center>
+# <center>tabPOP</center>
 
-![bunnyOS logo](https://assets.hellogirls.info/misc/favicon.png)
+![tabPOP logo](https://assets.hellogirls.info/misc/favicon.png)
 
 
 this is a new tab page that is inspired by [r/unixporn](https://www.reddit.com/r/unixporn/) and pc rices in general. 
@@ -14,4 +14,4 @@ in the process of refactoring it to make into a browser extension, so stay tuned
 - google searching
 
 ### examples
-![bunnyos examples](https://assets.hellogirls.info/misc/new+tab.png)
+![tabPOP examples](https://assets.hellogirls.info/misc/new+tab.png)
